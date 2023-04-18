@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <title>Sample Page</title>
+    <!-- Your CSS -->
+    <style>
+      
+    </style>
+  </head>
+  <body>
+    <!-- Your HTML -->
+    <html lang="en"><head>
+        <meta charset="utf-8">
+        <!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+        <title>Sample Page</title>
+        <!-- Your CSS -->
+        <style>
+          
+        </style>
+      <style type="text/css" id="operaUserStyle"></style></head>
+      <body>
+        <!-- Your HTML -->
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-343ca8ea-5fee-4a9f-af53-1e0552b68182@mhtml.blink">
+          
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+          <title>calware - Binary Deobfuscation: Preface</title><!-- Begin Jekyll SEO tag v2.6.1 -->
+        <meta name="generator" content="Jekyll v3.8.5">
+        <meta property="og:title" content="Binary Deobfuscation: Preface">
+        <meta property="og:locale" content="en_US">
+        <meta name="description" content="Binary Deobfuscation: Preface Table of Contents A Short Introduction Some Ground-Rules The Roadmap Meet The Enemy Commercial Protectors The Real Enemy ‘Legitimate’ Obfuscation Techniques, Topics, and Prevalence Instruction Substitution Control Flow Flattening Indirect Branches Opaque Predicates Function Inlining Function Outlining Dead Code Junk Code Constant Folding Constant Unfolding Virtualization Self Modification Jitting Commercial Obfuscations Malware Obfuscations ‘Legitimate’ Obfuscations A Conclusion, For Now Additional Reading References A Short Introduction Hello. My name is Cal, and as you read initially, this is a place for me to organize my thoughts. For a long time, I have been meaning to throw together some information regarding binary obfuscation. This post is going to be a preface to my journey exploring a variety of different protectors, the protections they provide (in terms of obfuscation), and how anybody with a little time and patience can overcome them. It’s my sincere hope that, by the end of my writing, both you and I may walk away with something remarkable: not just the tooling to break modern, existing binary obfuscations, but a more fundamental understanding behind the ideas that create them. The ability to manipulate obfuscated binary objects in a way not bound by time, or a specific implementation; that is what I’m hoping to forge. Some Ground-Rules I’m not interested in using paid, existing tools. This is something I feel alienates at-least a portion of readers, and I’m against it. So kiss your pirated version of IDA goodbye, and strap in. Also, the contents of this series will largely revolve around samples of x64 binaries built for Windows, but the tooling may not. In the spirit of being fair to readers, and advancing my own knowledge of Linux binaries, I’ll do my best to write some posts in that area as well; and mix the two when warranted. The Roadmap As an initial exercise, I’d like to explore Obfuscator-LLVM (OLLVM). This will allow us to build multiple, flexible examples of specific binary obfuscations, and understand what goes into both making and breaking them. This will also serve as a primer for LLVM’s intermediate representation (IR), and how we can leverage it to better understand our programs. Once we have the groundwork for the rest of our research put in place, we will begin analyzing larger, more developed commercial protectors. Therein, I hope to put the techniques obscuring program function into context with the aforementioned OLLVM work. Lastly, I hope to demonstrate the results of my research by using live, in-the-wild samples of binary obfuscation. This research would mean nothing to me, should it stay within the confines of meticulously arranged examples; and it certainly wouldn’t mean anything to you. Let’s just hope I find a way to evade lawsuits as we go. Meet The Enemy Speaking of lawsuits, below contains a list of software protectors that have caught my attention. As you may come to notice, there is quite a bit of overlap in terms of the protections they supply. This was intentional, as I hope to elaborate on certain obfuscation techniques in the context of multiple providers before focusing on one specifically. Commercial Protectors Obfuscator-LLVM (OLLVM) (*) - https://github.com/obfuscator-llvm/obfuscator/wiki The Tigress C Diversifier/Obfuscator (*) - http://tigress.cs.arizona.edu/index.html ReWolf’s Virtualizer (*) - https://github.com/rwfpl/rewolf-x86-virtualizer ASProtect - http://www.aspack.com/asprotect64.html Obsidium - https://www.obsidium.de/show/details/en PELock - https://www.pelock.com/products/pelock Enigma Protector - https://enigmaprotector.com/ CodeVirtualizer - https://www.oreans.com/codevirtualizer.php Themida - https://www.oreans.com/themida.php VMProtect - https://vmpsoft.com/ GuardIT - https://www.arxan.com/application-protection/desktop-server (*) Non-commercial applications Now, this is a list of (primarily) commercial protectors. It goes without saying, but it’s important to note: there are other examples of obfuscation out in the world of binaries, some of which have never been processed by commercial protection apps. Don’t be mistaken: these examples are not out of the scope of our research by any means. Below I have listed some of such examples. The Real Enemy ZeusVM - https://en.wikipedia.org/wiki/Zeus_(malware) FinSpy VM - https://en.wikipedia.org/wiki/FinFisher Nymaim - https://www.cyber.nj.gov/threat-profiles/trojan-variants/nymaim Smoke Loader - https://www.cyber.nj.gov/threat-profiles/trojan-variants/smoke-loader Swizzor - https://en.wikipedia.org/wiki/Swizzor APT10 ANEL - https://en.wikipedia.org/wiki/Red_Apollo xTunnel - https://en.wikipedia.org/wiki/Fancy_Bear Uroburos/Turla - https://en.wikipedia.org/wiki/Turla_(malware) When people mention binary obfuscation, malware is a very easy conclusion to arrive at. There is another side to that coin, though, and our list wouldn’t be complete without it. Below are the examples of ‘legitimate’ obfuscation I’ve collected. These are companies looking to obscure the inner workings of their code for reasons that range from monetary incentive, to consumer protection (or so they say). ‘Legitimate’ Obfuscation Skype - https://www.skype.com/en/ Spotify (See also Widevine) - https://www.spotify.com/us/ Adobe Photoshop - https://www.adobe.com/products/photoshop.html BattlEye - https://www.battleye.com/ EasyAntiCheat - https://www.easy.ac/en-us/ Windows PatchGuard/Kernel Patch Protection - https://en.wikipedia.org/wiki/Kernel_Patch_Protection Quick note: some of the above applications have been protected via entries in our commercial protectors list. In the event that the obfuscation implemented by these applications too closely resembles output from our commercial protectors, it will be stated, and subsequently omitted from future posts. Techniques, Topics, and Prevalence In this section, I am going to outline the obfuscation techniques used by the above applications, and arrange a table to represent the prevalence of said techniques. Instruction Substitution Also known as instruction mutation, “… this obfuscation technique simply consists in replacing standard binary operators (like addition, subtraction or boolean operators) by functionally equivalent, but more complicated sequences of instructions” 1 While I believe OLLVM’s description of this technique gets the point across, I would like to generalize it a bit. However this technique is implemented, it carries the primary objective of changing the content of the code, while retaining the original semantics. This technique isn’t limited to numerical operations. As long as the result of the transformation is functionally equivalent to the original, the implementation is entirely up to the creator. Let’s look at some examples of how this might work. mov eax, 1337h The above assembly snippet might be transformed into something like the following: add eax, 266Ch shr eax, 1h inc eax While the two snippets may look different, they are functionally equivalent. Below I have included the various phases of an example function as it transforms under OLLVM’s instruction substitution pass. Original C Source Code Clean Function Disassembly Obfuscated Function Disassembly Control Flow Flattening Also known as CFG flattening or CFF, The purpose behind control flow flattening is “to completely flatten the control flow graph of a program” 2 The control flow graph here refers to the various graphs generated by analysis tools which show a programs layout in the form of basic blocks. Further, “In a control-flow graph each node in the graph represents a basic block, i.e. a straight-line piece of code without any jumps or jump targets; jump targets start a block, and jumps end a block. Directed edges are used to represent jumps in the control flow. There are, in most presentations, two specially designated blocks: the entry block, through which control enters into the flow graph, and the exit block, through which all control flow leaves.” 3 The original source code The disassembly for our test function The disassembly for our test function after being ran through one of OLLVM's control flow flattening obfuscation passes Indirect Branches An indirect branch, “… rather than specifying the address of the next instruction to execute, as in a direct branch, the argument specifies where the address is located” 4 An easy way to think of this is an instruction sequence like the following: mov eax, function_address ... jmp eax Here is an example of an indirect branch, taken out of one of the above programs. This program is riddled with branches that look just like this; and at the time, IDA was not able to follow them. Opaque Predicates “an opaque predicate is a predicate—an expression that evaluates to either “true” or “false”—for which the outcome is known by the programmer … but which, for a variety of reasons, still needs to be evaluated at run time” 5 Opaque predicates are a particularly nasty form of control flow obfuscation. They come in all shapes and sizes, and determining the opaque-ness of a predicate can sometimes prove to be quite a challenge. To expand on the above explanation, in the context of an obfuscated binary this “true” or “false” expression is evaluated in the form of a conditional branch. Below I have included a small example of an opaque predicate. mov eax, 4h ... cmp eax, 4h je label_1 mov eax, 224h ; * this will never execute jmp label_187 ; * label_1: mov eax, 22h ... Now, as you may expect, this is not a realistic example of an in-the-wild opaque predicate. However, this example does illustrate the idea of using conditional branches to obfuscate the control flow of a program. And while this example is clearly quite simple, most implementations of the technique are not. For instance, the form of opaque predicate above is sometimes referred to as an invariant opaque predicate. 6 There are also contextual opaque predicates, whose value is not self-contained, but which relies on the value of an external variable (invariant). 6 Which isn’t to forget about dynamic opaque predicates, which are part of a grouping of predicates, arranged in such a way that all possible paths perform the same underlying functionality. 6 7 This is all just the tip of the iceberg. Opaque predicates also routinely cause problems within analysis platforms when certain assumptions are made. For instance, IDA Pro is one example of a tool that expects nice, proper code. 8 Below I have included an example of what can happen when you violate the assumptions made during IDA’s binary analysis. 'Opaque' predicate assembly code IDA Pro continues to disassemble the code Improved 'opaque' predicate assembly code Confusing IDA's analysis hides proceeding instructions As you can see in the above demonstration, even simple attempts at disrupting analysis tools can greatly modify the output. Here, IDA made the assumption that the one dummy data byte in our opaque predicate was an opcode expansion prefix forcing the instruction to require at-least one more byte. This next byte, of course, chipped into the real instruction that would be executed. If one wasn’t paying attention, you might miss that IDA signaled to this transformation in the instruction jz short near ptr loc_40100E+1 where the +1 at the end would tell an attentive reverse engineer that the initial branch skips one byte at it’s target location. Below, I have shown a very simple fix for this transformation. Simple fix for the above transformation Function Inlining “In computing, inline expansion, or inlining, is a manual or compiler optimization that replaces a function call site with the body of the called function” 9 Function inlining is a well known compiler optimization technique. 10 It shouldn’t surprise you to learn, when used inappropriately, and interwoven with our other obfuscation techniques, inline expansion can become a rather effective means of obfuscation. Take the following example: int bar (int val) { return val * 2; } int foo (int a, int b) { int c = bar(b); return a + c; } In order to reduce overhead from that call, your compiler may perform inline expansion and allow the function bar to be inlined into foo, shown below: int foo (int a, int b) { int c = b * 2; return a + c; } Which could, of course, further reduce by removing the dependency on variable c, but you get the point. Now, imagine instead of multiplying a number by two, the function bar was responsible for logging runtime information to a file. In this hypothetical logging function, suppose we also decide to implement some menial logic regarding the type of information we’re logging. If the function foo now were to call this logging function, even just a couple times, you can already begin to imagine how much our function would expand on the source level; not to mention the disassembly. It’s ironic: the most effective means to simplifying function inlining is also used as an obfuscation technique. Function Outlining “Outline pieces of a function into their own functions” 11 Synonymous with function splitting, the definition (and further implementation) of function outlining is broad. Some protectors will simply divvy up a function’s basic blocks; which will then retain a direct one-to-one relationship within their parent function. Some other protectors create entirely new functions, utilized by multiple different callers. For instance, take the following diagram: ASU's Tigress C Obfuscator &quot;Function Splitting&quot; Diagram (source) The above image is to imply that the new functions, f1 and f2, may contain code that isn’t present within the original function f (such as a prologue and epilogue). This transformation would then enable other functions, which may rely on the functionality of f1 or f2, to omit their own code and rely on an outlined function instead. Later down the road, we will investigate how exactly this feature is implemented by Tigress. In the meantime, we can make an interesting comparison to OLLVM. Unlike Tigress’ implied function outlining implementation, OLLVM behaves in the exact opposite manner. OLLVM’s disassembly would retain a direct, one-to-one relationship with it’s parent, in the event of a splitting pass. Dead Code “…dead code is a section in the source code of a program which is executed but whose result is never used in any other computation” 12 Additionally, it may be important to note: the registers dead code uses throughout it’s life cycle are sometimes referred to as dead registers.! Here, I have included a small assembly snippet which includes only functional code. mov eax, 2h add eax, 2h cmp eax, 4h ... Below, I have reworked our above example with a few instructions that correspond to our above definition of dead code. These instructions are marked with asterisks. mov ebx, 24h ; * mov eax, 2h add ebx, 12h ; * add eax, 2h mov ecx, ebx ; * inc ecx ; * cmp eax, 4h ... Since the dead code above occupies the registers ebx and ecx, these registers can now be considered dead. However, that isn’t to say these registers will always remain dead. The occupation of non-dead, living code, would indeed restore the status of ebx and ecx. Junk Code Also known as unreachable code, “… is part of the source code of a program which can never be executed because there exists no control flow path to the code from the rest of the program” 13 One of the things the above snippet fails to recognize, is that in the event of an opaque predicate whose secondary condition never executes, there would exist a control flow path to it’s location. I have created an example of this below. mov eax, 4h ... cmp eax, 4h je label_1 ; (A) mov ecx, 1h ; * this will never execute sub ebx, ecx ; * push ebx ; * call function_224 ; * label_1: ; (B) ... The instructions nested between the conditional jump (A) and our first label (B) are junk code; they’ll never execute. However, this doesn’t stop a control flow path from existing to their location. Constant Folding In order to understand the idea of constant unfolding (seen below), you must first understand the idea of constant folding. “Constant folding is the process of recognizing and evaluating constant expressions at compile time rather than computing them at runtime.” 14 Suppose we started with a piece of code like the following: int x = 220; int y = (x / 2) + 1; Constant folding, in this case, is just the reduction of the expression pointed to by our variable y at compile time: int x = 220; int y = 111; As stated above, constant folding is a form of optimization performed by compilers. Directly, this is not a technique that commonly corresponds to code obfuscation!; but given the context, constant folding could very much be used as a means to obscure code function; as is the case with many compiler optimizations. Constant Unfolding While both constant folding and constant unfolding can be used as an obfuscation technique, constant unfolding is more commonly seen.! Given the example of constant folding above, I have constructed a more intricate example of constant unfolding below. Something to keep in mind: although constant folding and unfolding seem easy to deal with, don’t let this fool you. Remember, the strength usually lies in the implementation. int x = 220; int y = (((x - 0xAA) | 0x58) ^ (((((x / 4) * 0x138759) >> 0x10) &amp; 0x11) + 0x6)) + 0x3; So, for a minute now, imagine the above arithmetic is done in assembly, amid other operations, across a flattened function, all while being executed through a custom virtual machine. Oh, right… Virtualization “In computing, a virtual machine (VM) is an emulation of a computer system” 15 That’s It. The virtual machines used in code obfuscation aren’t like VMware or VirtualBox. They don’t make use of technologies like AMD-V or Intel VT-x (thankfully). Instead, the virtual machines found within obfuscated binaries are simply interpreters.! The original, non-virtualized code of the underlying binary has been transformed into a custom bytecode. This custom bytecode is fed to an interpreter, whose job it is to mimic the actions of said underlying binary. Orean's CodeVirtualizer vm-based protection diagram (source) Above, I have included a screenshot from the commercial protector, CodeVirtualizer. As you can see, the simplistic code on the left is transformed into an entirely different instruction set on the right. I understand the above explanation is lacking. The problem with going into detail on this obfuscation technique now is the potential for variability in it’s implementation. So, let’s put a pin in it. I will go into considerably more detail on this technique in the posts to come. Self Modification “In computer science, self-modifying code is code that alters its own instructions while it is executing …” 16 There isn’t any more I’d like to say about this technique now. Like the above, the implementation defines the strength of the obfuscation. This is a technique I am excited to explore, though, as it will involve us creating some examples to work off of. Jitting Lastly, I want to briefly discuss the concept of jitting. “In computing, just-in-time (JIT) compilation (also dynamic translation or run-time compilations) is a way of executing computer code that involves compilation during execution of a program – at run time – rather than prior to execution.” 17 There is a lot to be said about the potential for this technique. It’s one that I believe is only used in the Tigress C Diversifier. This is also a technique we will be expanding on within examples that we create. Interestingly, Tigress also includes the ability to implement a transformation called JitDynamic, which “… is similar to the Jit transformation, except the jitted code is continuously modified and updated at runtime” 18. This technique would then be better classified as self modifying code. Now is a good time to state, I have not yet reversed all of the above applications. The table below is based largely on information I have read from others; and cited accordingly. Data lacking of citations is largely speculative, or backed by research I have conducted that will not be made public. The applications, the techniques, and their ordering are all subject to change. In time, this snippet will be replaced, and citations to my own research will be used in place of the existing ones below. For now, take everything in the table below with a grain of salt, and read up on those citations (if there are any). Commercial Obfuscations Application Instruction Substitution Control Flow Modification Indirect Branches Opaque Predicates Function Inlining Function Outlining Dead Code Junk Code Constant Unfolding Virtualization Self Modification Jitting Tigress ✅19 ✅19 ✅19 ✅19 ✅19 ✅19 ✅19 ✅19 ✅19 ✅19 ✅19 ✅19 Themida ✅20 ✅! ✅! ✅! ❌! ✅! ✅! ✅! ✅! ✅20 ❌! ❌! VMProtect ✅21 ✅! ✅! ✅21 ❔ ✅21 ✅21 ✅21 ✅! ✅21 ❌! ❌! GuardIT ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ PELock ✅22 ✅22 ✅22 ✅22 ❌! ✅22 ✅22 ✅22 ❌! ❌! ❌! ❌! OLLVM ✅23 ✅24 ❌! ✅25 ❌! ✅24 ❌! ✅25 ✅23 ❌! ❌! ❌! CodeVirtualizer ✅26 ❌! ❌! ❌! ❌! ❌! ❌! ❌! ❌! ✅26 ❌! ❌! ReWolf’s Virtualizer ❌! ❌! ❌! ❌! ❌! ❌! ❌! ❌! ❌! ✅27 ❌! ❌! Enigma Protector ✅28 ❔ ❔ ❔ ❌! ❔ ❔ ❔ ❔ ✅28 ❌! ❌! Obsidium ❌! ❔ ❔ ❔ ❌! ❔ ❔ ❔ ❔ ✅29 ❌! ❌! ASProtect ❌! ❔ ❔ ✅30 ❌! ❔ ❌! ✅30 ❔ ❌! ❌! ❌! Malware Obfuscations Application Instruction Substitution Control Flow Modification Indirect Branches Opaque Predicates Function Inlining Function Outlining Dead Code Junk Code Constant Unfolding Virtualization Self Modification Jitting ANEL ❌! ✅31 ✅31 ✅31 ❌! ❌! ✅31 ✅31 ✅31 ❌! ❌! ❌! Smoke Loader ❌! ✅32 ❔ ✅32 ❌! ✅32 ❌! ❔ ❔ ❌! ✅32 ❌! Nymaim ❌! ✅33 ✅33 ✅34 ❌! ❌! ❔ ❔ ✅34 ❌! ❌! ❌! xTunnel ❌! ❔ ❔ ✅35 36 ❌! ❌! ✅37 ✅35 ❔ ❌! ❌! ❌! Uroburos/Turla ❌! ❔ ❔ ✅38 ❌! ❌! ❔ ✅38 ❔ ❌! ❌! ❌! FinSpy VM ❌! ❔ ❌! ✅39 ❌! ❌! ✅39 ✅! ✅39 ✅40 39 ❌! ❌! ZeusVM ❌! ❔ ❔ ❔ ❌! ❌! ❔ ❔ ❔ ✅41 ❌! ❌! Swizzor ❌! ❔ ❔ ❔ ❌! ❌! ✅42 ❔ ❔ ❌! ❌! ❌! ‘Legitimate’ Obfuscations Application Instruction Substitution Control Flow Modification Indirect Branches Opaque Predicates Function Inlining Function Outlining Dead Code Junk Code Constant Unfolding Virtualization Self Modification Jitting BattlEye ✅! ✅! ✅! ✅! ❌! ✅! ✅! ✅! ✅! ✅! ❌! ❌! EasyAntiCheat ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ Photoshop ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ Spotify ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ PatchGuard ❌! ✅43 44 ✅45 ❔ ❌! ❌! ❔ ❔ ❔ ❌! ✅46 ❌! Skype ❌! ✅47 ✅47 ✅47 ❌! ❌! ❌! ❔ ❔ ❌! ❌! ❌! Note: A lot of the above applications utilize various forms of control flow modifications that are not control flow flattening. As such, I have generalized that category in the table above. A Conclusion, For Now I have made some bold and ambitious statements in this post. Systems like PatchGuard are completely unknown to me. Malware like Turla and Sednit are state-sponsored threats with high-priority targets. Not to mention, the obfuscation employed by all of above is said to be challenging——very difficult to work through. There is a lack of easy, straightforward solutions; and the research to engineer such tooling is generally contained within academic circles. There’s no doubt the road ahead is a long and challenging one. It will require me to learn a great deal about how these techniques are implemented, and how we can better go about circumventing them. Additionally, I am learning quickly that there are a myriad of legal obstacles in the way of my research. I want to make it clear: I don’t wish to be implicated in any legal manner for the sharing of this information, nor would I like to aid in the breaking of DRM schemes, or development of malware-focussed binary protection systems. So in the future, expect the methods I’ll use to share information with you to fall firmly within the bounds of what is fair, legal, and educational. That being said, I make this promise to you now: my research will apply to modern binary obfuscation. I will not diverge from the goals I stated initially. Additional Reading Above I mentioned that the most notable research into binary deobfuscation is largely contained within academic circles. Usually these resources are dry, and difficult to read through. So, in the spirit of not bogging you down with boring and speculative research, below I have done my best to list resources that I found to be both practical and engaging. Diablo - Deobfuscation: By Hand (https://diablo.elis.ugent.be/node/54) The Tigress C Diversifier/Obfuscator: Transformations (http://tigress.cs.arizona.edu/transformPage/index.html) Intermediate Representation - Wikipedia (https://en.wikipedia.org/wiki/Intermediate_representation) Usenix - Disassembling Obfuscated Binaries (https://www.usenix.org/legacy/publications/library/proceedings/sec04/tech/full_papers/kruegel/kruegel_html/node3.html) Optimizing Compiler (Specific Techniques) - Wikipedia (https://en.wikipedia.org/wiki/Optimizing_compiler#Specific_techniques) Compiler Optimizations for Reverse Engineers - Rolf Rolles, Mobius Strip Reverse Engineering (https://www.msreverseengineering.com/blog/2014/6/23/compiler-optimizations-for-reverse-engineers) Udupa, Sharath K., Saumya K. Debray, and Matias Madou. “Deobfuscation: Reverse engineering obfuscated code.” 12th Working Conference on Reverse Engineering (WCRE’05). IEEE, 2005. (https://ieeexplore.ieee.org/abstract/document/1566145) Deobfuscation: recovering an OLLVM-protected program (https://blog.quarkslab.com/deobfuscation-recovering-an-ollvm-protected-program.html) Aspire - Publications (https://aspire-fp7.eu/papers) Creating Code Obfuscation Virtual Machines - RECon 2008 (https://www.youtube.com/watch?v=d_OFrP-m2xU) References Obfuscator-LLVM: Instruction Substitution - https://github.com/obfuscator-llvm/obfuscator/wiki/Instructions-Substitution&nbsp;↩ Control Flow Flattening (Wikipedia) - https://github.com/obfuscator-llvm/obfuscator/wiki/Control-Flow-Flattening&nbsp;↩ [PDF] Masking wrong-successor Control Flow Errors employing data redundancy - https://ieeexplore.ieee.org/abstract/document/7365827&nbsp;↩ Indirect Branch (Wikipedia) - https://en.wikipedia.org/wiki/Indirect_branch&nbsp;↩ Opaque Predicate (Wikipedia) - https://en.wikipedia.org/wiki/Opaque_predicate&nbsp;↩ Thomas Ridma. “Seeing through obfuscation: interactive detection and removal of opaque predicates.” In the Digital Security Group, Institute for Computing and Information Sciences. 2017. - https://th0mas.nl/downloads/thesis/thesis.pdf&nbsp;↩&nbsp;↩2&nbsp;↩3 Palsberg, Jens, et al. “Experience with software watermarking.” Proceedings 16th Annual Computer Security Applications Conference (ACSAC’00). IEEE, 2000. - https://ieeexplore.ieee.org/document/898885&nbsp;↩ Hex-Rays: IDA and obfuscated code - https://www.hex-rays.com/products/ida/support/ppt/caro_obfuscation.ppt&nbsp;↩ Inline Expansion (Wikipedia) - https://en.wikipedia.org/wiki/Inline_expansion&nbsp;↩ Eilam, Eldad. *Reversing: Secrets of Reverse Engineering*. Wiley, 2005. Print. - https://www.wiley.com/en-us/Reversing%3A+Secrets+of+Reverse+Engineering+-p-9780764574818&nbsp;↩ The Tigress C Diversifier/Obfuscator: Function Splitting - http://tigress.cs.arizona.edu/transformPage/docs/split/index.html&nbsp;↩ Dead Code (Wikipedia) - https://en.wikipedia.org/wiki/Dead_code&nbsp;↩ Unreachable Code (Wikipedia) - https://en.wikipedia.org/wiki/Unreachable_code&nbsp;↩ Constant Folding (Wikipedia) - https://en.wikipedia.org/wiki/Constant_folding&nbsp;↩ Virtual Machine (Wikipedia) - https://en.wikipedia.org/wiki/Virtual_machine&nbsp;↩ Self-Modifying Code (Wikipedia) - https://en.wikipedia.org/wiki/Self-modifying_code&nbsp;↩ Just-in-time Compilation (Wikipedia) - https://en.wikipedia.org/wiki/Just-in-time_compilation&nbsp;↩ The Tigress C Diversifier/Obfuscator: Dynamic Obfuscation - http://tigress.cs.arizona.edu/transformPage/docs/jitDynamic/index.html&nbsp;↩ The Tigress C Diversifier/Obfuscator: Transformations - http://tigress.cs.arizona.edu/transformPage/index.html&nbsp;↩&nbsp;↩2&nbsp;↩3&nbsp;↩4&nbsp;↩5&nbsp;↩6&nbsp;↩7&nbsp;↩8&nbsp;↩9&nbsp;↩10&nbsp;↩11&nbsp;↩12 Oreans: Themida Overview - https://www.oreans.com/Themida.php&nbsp;↩&nbsp;↩2 VMProtect Software Protection: What is VMProtect? - http://vmpsoft.com/support/user-manual/introduction/what-is-vmprotect/&nbsp;↩&nbsp;↩2&nbsp;↩3&nbsp;↩4&nbsp;↩5&nbsp;↩6 PELock: Software protection system - https://www.pelock.com/products/pelock&nbsp;↩&nbsp;↩2&nbsp;↩3&nbsp;↩4&nbsp;↩5&nbsp;↩6&nbsp;↩7 Obfuscator-LLVM: Instruction Substitution - https://github.com/obfuscator-llvm/obfuscator/wiki/Instructions-Substitution&nbsp;↩&nbsp;↩2 Obfuscator-LLVM: Control Flow Flattening - https://github.com/obfuscator-llvm/obfuscator/wiki/Control-Flow-Flattening&nbsp;↩&nbsp;↩2 Obfuscator-LLVM: Bogus Control Flow - https://github.com/obfuscator-llvm/obfuscator/wiki/Bogus-Control-Flow&nbsp;↩&nbsp;↩2 Oreans: CodeVirtualizer Overview - https://oreans.com/CodeVirtualizer.php&nbsp;↩&nbsp;↩2 [PDF] ReWolf’s x86 Virtualizer: Documentation - http://rewolf.pl/stuff/x86.virt.pdf&nbsp;↩ The Enigma Protector: About - https://enigmaprotector.com/en/about.html&nbsp;↩&nbsp;↩2 Obsidium: Product Information - https://www.obsidium.de/show/details/en&nbsp;↩ David, Robin, Sébastien Bardin, and Jean-Yves Marion. “Targeting Infeasibility Questions on Obfuscated Codes.” arXiv preprint arXiv:1612.05675 (2016). - https://arxiv.org/pdf/1612.05675&nbsp;↩&nbsp;↩2 Carbon Black: Defeating Compiler-Level Obfuscations Used in APT10 Malware - https://www.carbonblack.com/2019/02/25/defeating-compiler-level-obfuscations-used-in-apt10-malware/&nbsp;↩&nbsp;↩2&nbsp;↩3&nbsp;↩4&nbsp;↩5&nbsp;↩6 CERT.PL: Dissecting Smoke Loader - https://www.cert.pl/en/news/single/dissecting-smoke-loader/&nbsp;↩&nbsp;↩2&nbsp;↩3&nbsp;↩4 ESET: Dymaim Obfuscation Chronicles - https://www.welivesecurity.com/2013/08/26/nymaim-obfuscation-chronicles/&nbsp;↩&nbsp;↩2 CERT.PL: Nymaim Revisited - https://www.cert.pl/en/news/single/nymaim-revisited/&nbsp;↩&nbsp;↩2 [PDF] ESET: En Route with Sednit (Part 2) - https://www.welivesecurity.com/wp-content/uploads/2016/10/eset-sednit-part-2.pdf&nbsp;↩&nbsp;↩2 [PDF] Sebastien Bardin, Robin David, Jean-Yves Marion. “Deobfuscation: Semantic Analysis to the Rescue”. Presentation at Virus Bulletin (2017). - https://www.virusbulletin.com/uploads/pdf/conference_slides/2017/Bardin-VB2017-Deobfuscation.pdf&nbsp;↩ [PDF] Robin David, Sebastien Bardin. “Code Deobfuscation: Intertwining Dynamic, Static and Symbolic Approaches”. Presentation at BlackHat Europe (2016). - https://www.robindavid.fr/publications/BHEU16_Robin_David.pdf&nbsp;↩ [PDF] ESET: Diplomats in Easter Europe Bitten by a Turla Mosquito - https://www.eset.com/me/whitepapers/eset-turla-mosquito/&nbsp;↩&nbsp;↩2 Mobius Strip Reverse Engineering: A Walk-Through Tutorial, with Code, on Statically Unpacking the FinSpy VM (Part One, x86 Deobfuscation) - https://www.msreverseengineering.com/blog/2018/1/23/a-walk-through-tutorial-with-code-on-statically-unpacking-the-finspy-vm-part-one-x86-deobfuscation&nbsp;↩&nbsp;↩2&nbsp;↩3&nbsp;↩4 Github: Rofl Rolles’ Static Unpacker for FinSpy VM - https://github.com/RolfRolles/FinSpyVM&nbsp;↩ Miasm’s Blog: ZeusVM Analysis - https://miasm.re/blog/2016/09/03/zeusvm_analysis.html&nbsp;↩ Pierre-Marc Bureau, Joan Calvet. “Understanding Swizzor’s Obfuscation Scheme”. Presentation at RECon (2010). - https://archive.org/details/UnderstandingSwizzorsObfuscationScheme-Pierre-marcBureauAndJoanCalvet&nbsp;↩ CSDN iiprogram’s Blog: Pathguard Reloaded, A Brief Analysis of PatchGuard Version 3 - https://blog.csdn.net/iiprogram/article/details/2456658&nbsp;↩ Uninformed: Subverting Patchguard Version 2; Obfuscation of System Integrity Check Calls via Structured Exception Handling - http://uninformed.org/index.cgi?v=6&amp;a=1&amp;p=8&nbsp;↩ Uninformed: Subverting Patchguard Version 2; Anti-Debug Code During Initialization - http://uninformed.org/index.cgi?v=6&amp;a=1&amp;p=5&nbsp;↩ Uninformed: Subverting Patchguard Version 2; Overwriting PatchGuard Initialization Code Post Boot - http://uninformed.org/index.cgi?v=6&amp;a=1&amp;p=12&nbsp;↩ [PDF] Philippe Biondi, Fabrice Desclaux. “Silver Needle in the Skype”. Presentation at BlackHat Europe (2006). - https://www.blackhat.com/presentations/bh-europe-06/bh-eu-06-biondi/bh-eu-06-biondi-up.pdf&nbsp;↩&nbsp;↩2&nbsp;↩3">
+        <meta property="og:description" content="Binary Deobfuscation: Preface Table of Contents A Short Introduction Some Ground-Rules The Roadmap Meet The Enemy Commercial Protectors The Real Enemy ‘Legitimate’ Obfuscation Techniques, Topics, and Prevalence Instruction Substitution Control Flow Flattening Indirect Branches Opaque Predicates Function Inlining Function Outlining Dead Code Junk Code Constant Folding Constant Unfolding Virtualization Self Modification Jitting Commercial Obfuscations Malware Obfuscations ‘Legitimate’ Obfuscations A Conclusion, For Now Additional Reading References A Short Introduction Hello. My name is Cal, and as you read initially, this is a place for me to organize my thoughts. For a long time, I have been meaning to throw together some information regarding binary obfuscation. This post is going to be a preface to my journey exploring a variety of different protectors, the protections they provide (in terms of obfuscation), and how anybody with a little time and patience can overcome them. It’s my sincere hope that, by the end of my writing, both you and I may walk away with something remarkable: not just the tooling to break modern, existing binary obfuscations, but a more fundamental understanding behind the ideas that create them. The ability to manipulate obfuscated binary objects in a way not bound by time, or a specific implementation; that is what I’m hoping to forge. Some Ground-Rules I’m not interested in using paid, existing tools. This is something I feel alienates at-least a portion of readers, and I’m against it. So kiss your pirated version of IDA goodbye, and strap in. Also, the contents of this series will largely revolve around samples of x64 binaries built for Windows, but the tooling may not. In the spirit of being fair to readers, and advancing my own knowledge of Linux binaries, I’ll do my best to write some posts in that area as well; and mix the two when warranted. The Roadmap As an initial exercise, I’d like to explore Obfuscator-LLVM (OLLVM). This will allow us to build multiple, flexible examples of specific binary obfuscations, and understand what goes into both making and breaking them. This will also serve as a primer for LLVM’s intermediate representation (IR), and how we can leverage it to better understand our programs. Once we have the groundwork for the rest of our research put in place, we will begin analyzing larger, more developed commercial protectors. Therein, I hope to put the techniques obscuring program function into context with the aforementioned OLLVM work. Lastly, I hope to demonstrate the results of my research by using live, in-the-wild samples of binary obfuscation. This research would mean nothing to me, should it stay within the confines of meticulously arranged examples; and it certainly wouldn’t mean anything to you. Let’s just hope I find a way to evade lawsuits as we go. Meet The Enemy Speaking of lawsuits, below contains a list of software protectors that have caught my attention. As you may come to notice, there is quite a bit of overlap in terms of the protections they supply. This was intentional, as I hope to elaborate on certain obfuscation techniques in the context of multiple providers before focusing on one specifically. Commercial Protectors Obfuscator-LLVM (OLLVM) (*) - https://github.com/obfuscator-llvm/obfuscator/wiki The Tigress C Diversifier/Obfuscator (*) - http://tigress.cs.arizona.edu/index.html ReWolf’s Virtualizer (*) - https://github.com/rwfpl/rewolf-x86-virtualizer ASProtect - http://www.aspack.com/asprotect64.html Obsidium - https://www.obsidium.de/show/details/en PELock - https://www.pelock.com/products/pelock Enigma Protector - https://enigmaprotector.com/ CodeVirtualizer - https://www.oreans.com/codevirtualizer.php Themida - https://www.oreans.com/themida.php VMProtect - https://vmpsoft.com/ GuardIT - https://www.arxan.com/application-protection/desktop-server (*) Non-commercial applications Now, this is a list of (primarily) commercial protectors. It goes without saying, but it’s important to note: there are other examples of obfuscation out in the world of binaries, some of which have never been processed by commercial protection apps. Don’t be mistaken: these examples are not out of the scope of our research by any means. Below I have listed some of such examples. The Real Enemy ZeusVM - https://en.wikipedia.org/wiki/Zeus_(malware) FinSpy VM - https://en.wikipedia.org/wiki/FinFisher Nymaim - https://www.cyber.nj.gov/threat-profiles/trojan-variants/nymaim Smoke Loader - https://www.cyber.nj.gov/threat-profiles/trojan-variants/smoke-loader Swizzor - https://en.wikipedia.org/wiki/Swizzor APT10 ANEL - https://en.wikipedia.org/wiki/Red_Apollo xTunnel - https://en.wikipedia.org/wiki/Fancy_Bear Uroburos/Turla - https://en.wikipedia.org/wiki/Turla_(malware) When people mention binary obfuscation, malware is a very easy conclusion to arrive at. There is another side to that coin, though, and our list wouldn’t be complete without it. Below are the examples of ‘legitimate’ obfuscation I’ve collected. These are companies looking to obscure the inner workings of their code for reasons that range from monetary incentive, to consumer protection (or so they say). ‘Legitimate’ Obfuscation Skype - https://www.skype.com/en/ Spotify (See also Widevine) - https://www.spotify.com/us/ Adobe Photoshop - https://www.adobe.com/products/photoshop.html BattlEye - https://www.battleye.com/ EasyAntiCheat - https://www.easy.ac/en-us/ Windows PatchGuard/Kernel Patch Protection - https://en.wikipedia.org/wiki/Kernel_Patch_Protection Quick note: some of the above applications have been protected via entries in our commercial protectors list. In the event that the obfuscation implemented by these applications too closely resembles output from our commercial protectors, it will be stated, and subsequently omitted from future posts. Techniques, Topics, and Prevalence In this section, I am going to outline the obfuscation techniques used by the above applications, and arrange a table to represent the prevalence of said techniques. Instruction Substitution Also known as instruction mutation, “… this obfuscation technique simply consists in replacing standard binary operators (like addition, subtraction or boolean operators) by functionally equivalent, but more complicated sequences of instructions” 1 While I believe OLLVM’s description of this technique gets the point across, I would like to generalize it a bit. However this technique is implemented, it carries the primary objective of changing the content of the code, while retaining the original semantics. This technique isn’t limited to numerical operations. As long as the result of the transformation is functionally equivalent to the original, the implementation is entirely up to the creator. Let’s look at some examples of how this might work. mov eax, 1337h The above assembly snippet might be transformed into something like the following: add eax, 266Ch shr eax, 1h inc eax While the two snippets may look different, they are functionally equivalent. Below I have included the various phases of an example function as it transforms under OLLVM’s instruction substitution pass. Original C Source Code Clean Function Disassembly Obfuscated Function Disassembly Control Flow Flattening Also known as CFG flattening or CFF, The purpose behind control flow flattening is “to completely flatten the control flow graph of a program” 2 The control flow graph here refers to the various graphs generated by analysis tools which show a programs layout in the form of basic blocks. Further, “In a control-flow graph each node in the graph represents a basic block, i.e. a straight-line piece of code without any jumps or jump targets; jump targets start a block, and jumps end a block. Directed edges are used to represent jumps in the control flow. There are, in most presentations, two specially designated blocks: the entry block, through which control enters into the flow graph, and the exit block, through which all control flow leaves.” 3 The original source code The disassembly for our test function The disassembly for our test function after being ran through one of OLLVM's control flow flattening obfuscation passes Indirect Branches An indirect branch, “… rather than specifying the address of the next instruction to execute, as in a direct branch, the argument specifies where the address is located” 4 An easy way to think of this is an instruction sequence like the following: mov eax, function_address ... jmp eax Here is an example of an indirect branch, taken out of one of the above programs. This program is riddled with branches that look just like this; and at the time, IDA was not able to follow them. Opaque Predicates “an opaque predicate is a predicate—an expression that evaluates to either “true” or “false”—for which the outcome is known by the programmer … but which, for a variety of reasons, still needs to be evaluated at run time” 5 Opaque predicates are a particularly nasty form of control flow obfuscation. They come in all shapes and sizes, and determining the opaque-ness of a predicate can sometimes prove to be quite a challenge. To expand on the above explanation, in the context of an obfuscated binary this “true” or “false” expression is evaluated in the form of a conditional branch. Below I have included a small example of an opaque predicate. mov eax, 4h ... cmp eax, 4h je label_1 mov eax, 224h ; * this will never execute jmp label_187 ; * label_1: mov eax, 22h ... Now, as you may expect, this is not a realistic example of an in-the-wild opaque predicate. However, this example does illustrate the idea of using conditional branches to obfuscate the control flow of a program. And while this example is clearly quite simple, most implementations of the technique are not. For instance, the form of opaque predicate above is sometimes referred to as an invariant opaque predicate. 6 There are also contextual opaque predicates, whose value is not self-contained, but which relies on the value of an external variable (invariant). 6 Which isn’t to forget about dynamic opaque predicates, which are part of a grouping of predicates, arranged in such a way that all possible paths perform the same underlying functionality. 6 7 This is all just the tip of the iceberg. Opaque predicates also routinely cause problems within analysis platforms when certain assumptions are made. For instance, IDA Pro is one example of a tool that expects nice, proper code. 8 Below I have included an example of what can happen when you violate the assumptions made during IDA’s binary analysis. 'Opaque' predicate assembly code IDA Pro continues to disassemble the code Improved 'opaque' predicate assembly code Confusing IDA's analysis hides proceeding instructions As you can see in the above demonstration, even simple attempts at disrupting analysis tools can greatly modify the output. Here, IDA made the assumption that the one dummy data byte in our opaque predicate was an opcode expansion prefix forcing the instruction to require at-least one more byte. This next byte, of course, chipped into the real instruction that would be executed. If one wasn’t paying attention, you might miss that IDA signaled to this transformation in the instruction jz short near ptr loc_40100E+1 where the +1 at the end would tell an attentive reverse engineer that the initial branch skips one byte at it’s target location. Below, I have shown a very simple fix for this transformation. Simple fix for the above transformation Function Inlining “In computing, inline expansion, or inlining, is a manual or compiler optimization that replaces a function call site with the body of the called function” 9 Function inlining is a well known compiler optimization technique. 10 It shouldn’t surprise you to learn, when used inappropriately, and interwoven with our other obfuscation techniques, inline expansion can become a rather effective means of obfuscation. Take the following example: int bar (int val) { return val * 2; } int foo (int a, int b) { int c = bar(b); return a + c; } In order to reduce overhead from that call, your compiler may perform inline expansion and allow the function bar to be inlined into foo, shown below: int foo (int a, int b) { int c = b * 2; return a + c; } Which could, of course, further reduce by removing the dependency on variable c, but you get the point. Now, imagine instead of multiplying a number by two, the function bar was responsible for logging runtime information to a file. In this hypothetical logging function, suppose we also decide to implement some menial logic regarding the type of information we’re logging. If the function foo now were to call this logging function, even just a couple times, you can already begin to imagine how much our function would expand on the source level; not to mention the disassembly. It’s ironic: the most effective means to simplifying function inlining is also used as an obfuscation technique. Function Outlining “Outline pieces of a function into their own functions” 11 Synonymous with function splitting, the definition (and further implementation) of function outlining is broad. Some protectors will simply divvy up a function’s basic blocks; which will then retain a direct one-to-one relationship within their parent function. Some other protectors create entirely new functions, utilized by multiple different callers. For instance, take the following diagram: ASU's Tigress C Obfuscator &quot;Function Splitting&quot; Diagram (source) The above image is to imply that the new functions, f1 and f2, may contain code that isn’t present within the original function f (such as a prologue and epilogue). This transformation would then enable other functions, which may rely on the functionality of f1 or f2, to omit their own code and rely on an outlined function instead. Later down the road, we will investigate how exactly this feature is implemented by Tigress. In the meantime, we can make an interesting comparison to OLLVM. Unlike Tigress’ implied function outlining implementation, OLLVM behaves in the exact opposite manner. OLLVM’s disassembly would retain a direct, one-to-one relationship with it’s parent, in the event of a splitting pass. Dead Code “…dead code is a section in the source code of a program which is executed but whose result is never used in any other computation” 12 Additionally, it may be important to note: the registers dead code uses throughout it’s life cycle are sometimes referred to as dead registers.! Here, I have included a small assembly snippet which includes only functional code. mov eax, 2h add eax, 2h cmp eax, 4h ... Below, I have reworked our above example with a few instructions that correspond to our above definition of dead code. These instructions are marked with asterisks. mov ebx, 24h ; * mov eax, 2h add ebx, 12h ; * add eax, 2h mov ecx, ebx ; * inc ecx ; * cmp eax, 4h ... Since the dead code above occupies the registers ebx and ecx, these registers can now be considered dead. However, that isn’t to say these registers will always remain dead. The occupation of non-dead, living code, would indeed restore the status of ebx and ecx. Junk Code Also known as unreachable code, “… is part of the source code of a program which can never be executed because there exists no control flow path to the code from the rest of the program” 13 One of the things the above snippet fails to recognize, is that in the event of an opaque predicate whose secondary condition never executes, there would exist a control flow path to it’s location. I have created an example of this below. mov eax, 4h ... cmp eax, 4h je label_1 ; (A) mov ecx, 1h ; * this will never execute sub ebx, ecx ; * push ebx ; * call function_224 ; * label_1: ; (B) ... The instructions nested between the conditional jump (A) and our first label (B) are junk code; they’ll never execute. However, this doesn’t stop a control flow path from existing to their location. Constant Folding In order to understand the idea of constant unfolding (seen below), you must first understand the idea of constant folding. “Constant folding is the process of recognizing and evaluating constant expressions at compile time rather than computing them at runtime.” 14 Suppose we started with a piece of code like the following: int x = 220; int y = (x / 2) + 1; Constant folding, in this case, is just the reduction of the expression pointed to by our variable y at compile time: int x = 220; int y = 111; As stated above, constant folding is a form of optimization performed by compilers. Directly, this is not a technique that commonly corresponds to code obfuscation!; but given the context, constant folding could very much be used as a means to obscure code function; as is the case with many compiler optimizations. Constant Unfolding While both constant folding and constant unfolding can be used as an obfuscation technique, constant unfolding is more commonly seen.! Given the example of constant folding above, I have constructed a more intricate example of constant unfolding below. Something to keep in mind: although constant folding and unfolding seem easy to deal with, don’t let this fool you. Remember, the strength usually lies in the implementation. int x = 220; int y = (((x - 0xAA) | 0x58) ^ (((((x / 4) * 0x138759) >> 0x10) &amp; 0x11) + 0x6)) + 0x3; So, for a minute now, imagine the above arithmetic is done in assembly, amid other operations, across a flattened function, all while being executed through a custom virtual machine. Oh, right… Virtualization “In computing, a virtual machine (VM) is an emulation of a computer system” 15 That’s It. The virtual machines used in code obfuscation aren’t like VMware or VirtualBox. They don’t make use of technologies like AMD-V or Intel VT-x (thankfully). Instead, the virtual machines found within obfuscated binaries are simply interpreters.! The original, non-virtualized code of the underlying binary has been transformed into a custom bytecode. This custom bytecode is fed to an interpreter, whose job it is to mimic the actions of said underlying binary. Orean's CodeVirtualizer vm-based protection diagram (source) Above, I have included a screenshot from the commercial protector, CodeVirtualizer. As you can see, the simplistic code on the left is transformed into an entirely different instruction set on the right. I understand the above explanation is lacking. The problem with going into detail on this obfuscation technique now is the potential for variability in it’s implementation. So, let’s put a pin in it. I will go into considerably more detail on this technique in the posts to come. Self Modification “In computer science, self-modifying code is code that alters its own instructions while it is executing …” 16 There isn’t any more I’d like to say about this technique now. Like the above, the implementation defines the strength of the obfuscation. This is a technique I am excited to explore, though, as it will involve us creating some examples to work off of. Jitting Lastly, I want to briefly discuss the concept of jitting. “In computing, just-in-time (JIT) compilation (also dynamic translation or run-time compilations) is a way of executing computer code that involves compilation during execution of a program – at run time – rather than prior to execution.” 17 There is a lot to be said about the potential for this technique. It’s one that I believe is only used in the Tigress C Diversifier. This is also a technique we will be expanding on within examples that we create. Interestingly, Tigress also includes the ability to implement a transformation called JitDynamic, which “… is similar to the Jit transformation, except the jitted code is continuously modified and updated at runtime” 18. This technique would then be better classified as self modifying code. Now is a good time to state, I have not yet reversed all of the above applications. The table below is based largely on information I have read from others; and cited accordingly. Data lacking of citations is largely speculative, or backed by research I have conducted that will not be made public. The applications, the techniques, and their ordering are all subject to change. In time, this snippet will be replaced, and citations to my own research will be used in place of the existing ones below. For now, take everything in the table below with a grain of salt, and read up on those citations (if there are any). Commercial Obfuscations Application Instruction Substitution Control Flow Modification Indirect Branches Opaque Predicates Function Inlining Function Outlining Dead Code Junk Code Constant Unfolding Virtualization Self Modification Jitting Tigress ✅19 ✅19 ✅19 ✅19 ✅19 ✅19 ✅19 ✅19 ✅19 ✅19 ✅19 ✅19 Themida ✅20 ✅! ✅! ✅! ❌! ✅! ✅! ✅! ✅! ✅20 ❌! ❌! VMProtect ✅21 ✅! ✅! ✅21 ❔ ✅21 ✅21 ✅21 ✅! ✅21 ❌! ❌! GuardIT ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ PELock ✅22 ✅22 ✅22 ✅22 ❌! ✅22 ✅22 ✅22 ❌! ❌! ❌! ❌! OLLVM ✅23 ✅24 ❌! ✅25 ❌! ✅24 ❌! ✅25 ✅23 ❌! ❌! ❌! CodeVirtualizer ✅26 ❌! ❌! ❌! ❌! ❌! ❌! ❌! ❌! ✅26 ❌! ❌! ReWolf’s Virtualizer ❌! ❌! ❌! ❌! ❌! ❌! ❌! ❌! ❌! ✅27 ❌! ❌! Enigma Protector ✅28 ❔ ❔ ❔ ❌! ❔ ❔ ❔ ❔ ✅28 ❌! ❌! Obsidium ❌! ❔ ❔ ❔ ❌! ❔ ❔ ❔ ❔ ✅29 ❌! ❌! ASProtect ❌! ❔ ❔ ✅30 ❌! ❔ ❌! ✅30 ❔ ❌! ❌! ❌! Malware Obfuscations Application Instruction Substitution Control Flow Modification Indirect Branches Opaque Predicates Function Inlining Function Outlining Dead Code Junk Code Constant Unfolding Virtualization Self Modification Jitting ANEL ❌! ✅31 ✅31 ✅31 ❌! ❌! ✅31 ✅31 ✅31 ❌! ❌! ❌! Smoke Loader ❌! ✅32 ❔ ✅32 ❌! ✅32 ❌! ❔ ❔ ❌! ✅32 ❌! Nymaim ❌! ✅33 ✅33 ✅34 ❌! ❌! ❔ ❔ ✅34 ❌! ❌! ❌! xTunnel ❌! ❔ ❔ ✅35 36 ❌! ❌! ✅37 ✅35 ❔ ❌! ❌! ❌! Uroburos/Turla ❌! ❔ ❔ ✅38 ❌! ❌! ❔ ✅38 ❔ ❌! ❌! ❌! FinSpy VM ❌! ❔ ❌! ✅39 ❌! ❌! ✅39 ✅! ✅39 ✅40 39 ❌! ❌! ZeusVM ❌! ❔ ❔ ❔ ❌! ❌! ❔ ❔ ❔ ✅41 ❌! ❌! Swizzor ❌! ❔ ❔ ❔ ❌! ❌! ✅42 ❔ ❔ ❌! ❌! ❌! ‘Legitimate’ Obfuscations Application Instruction Substitution Control Flow Modification Indirect Branches Opaque Predicates Function Inlining Function Outlining Dead Code Junk Code Constant Unfolding Virtualization Self Modification Jitting BattlEye ✅! ✅! ✅! ✅! ❌! ✅! ✅! ✅! ✅! ✅! ❌! ❌! EasyAntiCheat ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ Photoshop ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ Spotify ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ ❔ PatchGuard ❌! ✅43 44 ✅45 ❔ ❌! ❌! ❔ ❔ ❔ ❌! ✅46 ❌! Skype ❌! ✅47 ✅47 ✅47 ❌! ❌! ❌! ❔ ❔ ❌! ❌! ❌! Note: A lot of the above applications utilize various forms of control flow modifications that are not control flow flattening. As such, I have generalized that category in the table above. A Conclusion, For Now I have made some bold and ambitious statements in this post. Systems like PatchGuard are completely unknown to me. Malware like Turla and Sednit are state-sponsored threats with high-priority targets. Not to mention, the obfuscation employed by all of above is said to be challenging——very difficult to work through. There is a lack of easy, straightforward solutions; and the research to engineer such tooling is generally contained within academic circles. There’s no doubt the road ahead is a long and challenging one. It will require me to learn a great deal about how these techniques are implemented, and how we can better go about circumventing them. Additionally, I am learning quickly that there are a myriad of legal obstacles in the way of my research. I want to make it clear: I don’t wish to be implicated in any legal manner for the sharing of this information, nor would I like to aid in the breaking of DRM schemes, or development of malware-focussed binary protection systems. So in the future, expect the methods I’ll use to share information with you to fall firmly within the bounds of what is fair, legal, and educational. That being said, I make this promise to you now: my research will apply to modern binary obfuscation. I will not diverge from the goals I stated initially. Additional Reading Above I mentioned that the most notable research into binary deobfuscation is largely contained within academic circles. Usually these resources are dry, and difficult to read through. So, in the spirit of not bogging you down with boring and speculative research, below I have done my best to list resources that I found to be both practical and engaging. Diablo - Deobfuscation: By Hand (https://diablo.elis.ugent.be/node/54) The Tigress C Diversifier/Obfuscator: Transformations (http://tigress.cs.arizona.edu/transformPage/index.html) Intermediate Representation - Wikipedia (https://en.wikipedia.org/wiki/Intermediate_representation) Usenix - Disassembling Obfuscated Binaries (https://www.usenix.org/legacy/publications/library/proceedings/sec04/tech/full_papers/kruegel/kruegel_html/node3.html) Optimizing Compiler (Specific Techniques) - Wikipedia (https://en.wikipedia.org/wiki/Optimizing_compiler#Specific_techniques) Compiler Optimizations for Reverse Engineers - Rolf Rolles, Mobius Strip Reverse Engineering (https://www.msreverseengineering.com/blog/2014/6/23/compiler-optimizations-for-reverse-engineers) Udupa, Sharath K., Saumya K. Debray, and Matias Madou. “Deobfuscation: Reverse engineering obfuscated code.” 12th Working Conference on Reverse Engineering (WCRE’05). IEEE, 2005. (https://ieeexplore.ieee.org/abstract/document/1566145) Deobfuscation: recovering an OLLVM-protected program (https://blog.quarkslab.com/deobfuscation-recovering-an-ollvm-protected-program.html) Aspire - Publications (https://aspire-fp7.eu/papers) Creating Code Obfuscation Virtual Machines - RECon 2008 (https://www.youtube.com/watch?v=d_OFrP-m2xU) References Obfuscator-LLVM: Instruction Substitution - https://github.com/obfuscator-llvm/obfuscator/wiki/Instructions-Substitution&nbsp;↩ Control Flow Flattening (Wikipedia) - https://github.com/obfuscator-llvm/obfuscator/wiki/Control-Flow-Flattening&nbsp;↩ [PDF] Masking wrong-successor Control Flow Errors employing data redundancy - https://ieeexplore.ieee.org/abstract/document/7365827&nbsp;↩ Indirect Branch (Wikipedia) - https://en.wikipedia.org/wiki/Indirect_branch&nbsp;↩ Opaque Predicate (Wikipedia) - https://en.wikipedia.org/wiki/Opaque_predicate&nbsp;↩ Thomas Ridma. “Seeing through obfuscation: interactive detection and removal of opaque predicates.” In the Digital Security Group, Institute for Computing and Information Sciences. 2017. - https://th0mas.nl/downloads/thesis/thesis.pdf&nbsp;↩&nbsp;↩2&nbsp;↩3 Palsberg, Jens, et al. “Experience with software watermarking.” Proceedings 16th Annual Computer Security Applications Conference (ACSAC’00). IEEE, 2000. - https://ieeexplore.ieee.org/document/898885&nbsp;↩ Hex-Rays: IDA and obfuscated code - https://www.hex-rays.com/products/ida/support/ppt/caro_obfuscation.ppt&nbsp;↩ Inline Expansion (Wikipedia) - https://en.wikipedia.org/wiki/Inline_expansion&nbsp;↩ Eilam, Eldad. *Reversing: Secrets of Reverse Engineering*. Wiley, 2005. Print. - https://www.wiley.com/en-us/Reversing%3A+Secrets+of+Reverse+Engineering+-p-9780764574818&nbsp;↩ The Tigress C Diversifier/Obfuscator: Function Splitting - http://tigress.cs.arizona.edu/transformPage/docs/split/index.html&nbsp;↩ Dead Code (Wikipedia) - https://en.wikipedia.org/wiki/Dead_code&nbsp;↩ Unreachable Code (Wikipedia) - https://en.wikipedia.org/wiki/Unreachable_code&nbsp;↩ Constant Folding (Wikipedia) - https://en.wikipedia.org/wiki/Constant_folding&nbsp;↩ Virtual Machine (Wikipedia) - https://en.wikipedia.org/wiki/Virtual_machine&nbsp;↩ Self-Modifying Code (Wikipedia) - https://en.wikipedia.org/wiki/Self-modifying_code&nbsp;↩ Just-in-time Compilation (Wikipedia) - https://en.wikipedia.org/wiki/Just-in-time_compilation&nbsp;↩ The Tigress C Diversifier/Obfuscator: Dynamic Obfuscation - http://tigress.cs.arizona.edu/transformPage/docs/jitDynamic/index.html&nbsp;↩ The Tigress C Diversifier/Obfuscator: Transformations - http://tigress.cs.arizona.edu/transformPage/index.html&nbsp;↩&nbsp;↩2&nbsp;↩3&nbsp;↩4&nbsp;↩5&nbsp;↩6&nbsp;↩7&nbsp;↩8&nbsp;↩9&nbsp;↩10&nbsp;↩11&nbsp;↩12 Oreans: Themida Overview - https://www.oreans.com/Themida.php&nbsp;↩&nbsp;↩2 VMProtect Software Protection: What is VMProtect? - http://vmpsoft.com/support/user-manual/introduction/what-is-vmprotect/&nbsp;↩&nbsp;↩2&nbsp;↩3&nbsp;↩4&nbsp;↩5&nbsp;↩6 PELock: Software protection system - https://www.pelock.com/products/pelock&nbsp;↩&nbsp;↩2&nbsp;↩3&nbsp;↩4&nbsp;↩5&nbsp;↩6&nbsp;↩7 Obfuscator-LLVM: Instruction Substitution - https://github.com/obfuscator-llvm/obfuscator/wiki/Instructions-Substitution&nbsp;↩&nbsp;↩2 Obfuscator-LLVM: Control Flow Flattening - https://github.com/obfuscator-llvm/obfuscator/wiki/Control-Flow-Flattening&nbsp;↩&nbsp;↩2 Obfuscator-LLVM: Bogus Control Flow - https://github.com/obfuscator-llvm/obfuscator/wiki/Bogus-Control-Flow&nbsp;↩&nbsp;↩2 Oreans: CodeVirtualizer Overview - https://oreans.com/CodeVirtualizer.php&nbsp;↩&nbsp;↩2 [PDF] ReWolf’s x86 Virtualizer: Documentation - http://rewolf.pl/stuff/x86.virt.pdf&nbsp;↩ The Enigma Protector: About - https://enigmaprotector.com/en/about.html&nbsp;↩&nbsp;↩2 Obsidium: Product Information - https://www.obsidium.de/show/details/en&nbsp;↩ David, Robin, Sébastien Bardin, and Jean-Yves Marion. “Targeting Infeasibility Questions on Obfuscated Codes.” arXiv preprint arXiv:1612.05675 (2016). - https://arxiv.org/pdf/1612.05675&nbsp;↩&nbsp;↩2 Carbon Black: Defeating Compiler-Level Obfuscations Used in APT10 Malware - https://www.carbonblack.com/2019/02/25/defeating-compiler-level-obfuscations-used-in-apt10-malware/&nbsp;↩&nbsp;↩2&nbsp;↩3&nbsp;↩4&nbsp;↩5&nbsp;↩6 CERT.PL: Dissecting Smoke Loader - https://www.cert.pl/en/news/single/dissecting-smoke-loader/&nbsp;↩&nbsp;↩2&nbsp;↩3&nbsp;↩4 ESET: Dymaim Obfuscation Chronicles - https://www.welivesecurity.com/2013/08/26/nymaim-obfuscation-chronicles/&nbsp;↩&nbsp;↩2 CERT.PL: Nymaim Revisited - https://www.cert.pl/en/news/single/nymaim-revisited/&nbsp;↩&nbsp;↩2 [PDF] ESET: En Route with Sednit (Part 2) - https://www.welivesecurity.com/wp-content/uploads/2016/10/eset-sednit-part-2.pdf&nbsp;↩&nbsp;↩2 [PDF] Sebastien Bardin, Robin David, Jean-Yves Marion. “Deobfuscation: Semantic Analysis to the Rescue”. Presentation at Virus Bulletin (2017). - https://www.virusbulletin.com/uploads/pdf/conference_slides/2017/Bardin-VB2017-Deobfuscation.pdf&nbsp;↩ [PDF] Robin David, Sebastien Bardin. “Code Deobfuscation: Intertwining Dynamic, Static and Symbolic Approaches”. Presentation at BlackHat Europe (2016). - https://www.robindavid.fr/publications/BHEU16_Robin_David.pdf&nbsp;↩ [PDF] ESET: Diplomats in Easter Europe Bitten by a Turla Mosquito - https://www.eset.com/me/whitepapers/eset-turla-mosquito/&nbsp;↩&nbsp;↩2 Mobius Strip Reverse Engineering: A Walk-Through Tutorial, with Code, on Statically Unpacking the FinSpy VM (Part One, x86 Deobfuscation) - https://www.msreverseengineering.com/blog/2018/1/23/a-walk-through-tutorial-with-code-on-statically-unpacking-the-finspy-vm-part-one-x86-deobfuscation&nbsp;↩&nbsp;↩2&nbsp;↩3&nbsp;↩4 Github: Rofl Rolles’ Static Unpacker for FinSpy VM - https://github.com/RolfRolles/FinSpyVM&nbsp;↩ Miasm’s Blog: ZeusVM Analysis - https://miasm.re/blog/2016/09/03/zeusvm_analysis.html&nbsp;↩ Pierre-Marc Bureau, Joan Calvet. “Understanding Swizzor’s Obfuscation Scheme”. Presentation at RECon (2010). - https://archive.org/details/UnderstandingSwizzorsObfuscationScheme-Pierre-marcBureauAndJoanCalvet&nbsp;↩ CSDN iiprogram’s Blog: Pathguard Reloaded, A Brief Analysis of PatchGuard Version 3 - https://blog.csdn.net/iiprogram/article/details/2456658&nbsp;↩ Uninformed: Subverting Patchguard Version 2; Obfuscation of System Integrity Check Calls via Structured Exception Handling - http://uninformed.org/index.cgi?v=6&amp;a=1&amp;p=8&nbsp;↩ Uninformed: Subverting Patchguard Version 2; Anti-Debug Code During Initialization - http://uninformed.org/index.cgi?v=6&amp;a=1&amp;p=5&nbsp;↩ Uninformed: Subverting Patchguard Version 2; Overwriting PatchGuard Initialization Code Post Boot - http://uninformed.org/index.cgi?v=6&amp;a=1&amp;p=12&nbsp;↩ [PDF] Philippe Biondi, Fabrice Desclaux. “Silver Needle in the Skype”. Presentation at BlackHat Europe (2006). - https://www.blackhat.com/presentations/bh-europe-06/bh-eu-06-biondi/bh-eu-06-biondi-up.pdf&nbsp;↩&nbsp;↩2&nbsp;↩3">
+        <link rel="canonical" href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface">
+        <meta property="og:url" content="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface">
+        <meta property="og:site_name" content="calware -">
+        <meta property="og:type" content="article">
+        <meta property="article:published_time" content="2019-08-24T16:00:14+00:00">
+        
+        <!-- End Jekyll SEO tag -->
+        <link rel="stylesheet" type="text/css" href="https://calwa.re/assets/main-dark.css"><!-- google analytics -->
+        
+        <!-- highlight.js -->
+          <link rel="stylesheet" href="https://calwa.re/assets/pojoaque.css">
+          
+          
+        <style type="text/css" id="operaUserStyle"></style>
+        
+            <div class="container"><header>
+          <div class="menu">
+            <ul><li><a href="https://calwa.re/">index</a></li><li><a href="https://calwa.re/downloads">downloads</a></li><li><a href="https://calwa.re/about">about</a></li><li><a href="https://calwa.re/contact">contact</a></li></ul>
+          </div>
+        </header>
+        <main>
+              
+        <h1 id="binary-deobfuscation-preface">Перевел Nitro</h1>
+        <h1 id="binary-deobfuscation-preface">Деобфускация бинарников</h1>
+        
+        <p>Содержание</p>
+        <ul id="markdown-toc">
+          <li><a id="markdown-toc-a-short-introduction">Краткий экскурс в глубины деобфускации</a></li>
+          <li><a id="markdown-toc-some-ground-rules">Рулзы</a></li>
+          <li><a id="markdown-toc-the-roadmap">The Roadmap</a>    <ul>
+              <li><a id="markdown-toc-meet-the-enemy">Знакомство с "врагами"</a>        <ul>
+                  <li><a id="markdown-toc-commercial-protectors">Комерс протекторы</a></li>
+                  <li><a id="markdown-toc-the-real-enemy">Представляющие угрозу</a></li>
+                  <li><a id="markdown-toc-legitimate-obfuscation">"В благих целях"</a></li>
+                </ul>
+              </li>
+              <li><a id="markdown-toc-techniques-topics-and-prevalence">Техники, подтемы и прочая ерунда</a>        <ul>
+                  <li><a id="markdown-toc-instruction-substitution">Instruction Substitution</a></li>
+                  <li><a id="markdown-toc-control-flow-flattening">Control Flow Flattening</a></li>
+                  <li><a id="markdown-toc-indirect-branches">Indirect Branches</a></li>
+                  <li><a id="markdown-toc-opaque-predicates">Opaque Predicates</a></li>
+                  <li><a id="markdown-toc-function-inlining">Function Inlining</a></li>
+                  <li><a id="markdown-toc-function-outlining">Function Outlining</a></li>
+                  <li><a id="markdown-toc-dead-code">Dead Code</a></li>
+                  <li><a id="markdown-toc-junk-code">Junk Code</a></li>
+                  <li><a id="markdown-toc-constant-folding">Constant Folding</a></li>
+                  <li><a id="markdown-toc-constant-unfolding">Constant Unfolding</a></li>
+                  <li><a id="markdown-toc-virtualization">Virtualization</a></li>
+                  <li><a id="markdown-toc-self-modification">Self Modification</a></li>
+                  <li><a id="markdown-toc-jitting">Jitting</a></li>
+                  <li><a id="markdown-toc-commercial-obfuscations">Commercial Obfuscations</a></li>
+                  <li><a id="markdown-toc-malware-obfuscations">Malware Obfuscations</a></li>
+                  <li><a id="markdown-toc-legitimate-obfuscations">‘Legitimate’ Obfuscations</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><a id="markdown-toc-a-conclusion-for-now">Вывод на сегодняшний день</a></li>
+          <li><a id="markdown-toc-additional-reading">Дополнительное чтиво</a></li>
+          <li><a id="markdown-toc-references">Ссылки на софт, который упоминался тута</a></li>
+        </ul>
+        
+        <hr>
+        
+        <h2 id="a-short-introduction">Краткий экскурс в глубины деобфускации</h2>
+        
+        <p>Всем привет</p>
+        
+        <p>Меня зовут Cal, и как вы прочитали вначале, это место, где я записываю свои опусы.</p>
+        
+        <p>Я давно собирался собрать информацию об обфускации. Эта статья будет предисловием к моему путешествию в исследовании различных защитных механизмов и обфускации, которые они предоставляют.</p>
+        
+        <p id="goals">Я искренне надеюсь, что к концу моего опуса и вы и я сможем уйти с чем-то замечательным: не только с инструментами для преодоления современных бинарных обфускаций, но и с более глубоким пониманием идей, которые их создают. Я надеюсь создать возможность манипулировать обфусцированной ерундой таким способом, который не будет привязан к определенному времени или имплементации.</p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/img-sep.png">
+        </div>
+        
+        <h2 id="some-ground-rules">Рулзы</h2>
+        
+        <p>Меня не интересует использование платных существующих инструментов. Я считаю, что это отталкивает как минимум часть читателей, и я против этого. Так что попрощайтесь со своей пиратской версией IDA и пр. дерьма - готовьтесь.</p>
+        
+        <p>Кроме того, содержание этой серии в основном будет касаться образцов PE для Win64, но это не относится к инструментам. В попытке быть честным перед читателями и преодоления моего собственного знания бинарных файлов Linux я сделаю все возможное, чтобы написать несколько постов в этой области и смешать две темы, когда это будет уместно.</p>
+        
+        <hr>
+        
+        <h1 id="the-roadmap">The Roadmap</h1>
+        
+        <p>В качестве начального упражнения я хотел бы изучить <a href="https://github.com/obfuscator-llvm/obfuscator/wiki">Obfuscator-LLVM (OLLVM)</a>. Это позволит нам создать множество гибких примеров конкретной обфускации и понять, что входит в их создание и слом. Это также послужит основой для<a href="https://llvm.org/">LLVM’s</a> intermediate representation (IR),) и то, как мы можем использовать его(IR) для лучшего понимания работы обфускации программ.</p>
+        
+        <p>Как только у нас будет база, мы начнем анализировать более крупные и развитые коммерческие средства защиты. В нем(OLLVM) я надеюсь поместить методы, скрывающие функцию программы, в контекст вышеупомянутого<a href="https://github.com/obfuscator-llvm/obfuscator/wiki">OLLVM</a> work.</p>
+        
+        <p>Наконец, я надеюсь продемонстрировать результаты моего исследования, используя живые примеры. Это исследование ничего не значило бы для меня, если бы оно оставалось в рамках тщательно подобранных примеров; и это, конечно, ничего не значило бы для вас.</p>
+        
+        <hr>
+        
+        <h2 id="meet-the-enemy">Знакомство с "врагами"</h2>
+        
+        <p>Ниже приведен список средств защиты программного обеспечения, которые привлекли мое внимание. Как вы, возможно, заметили, существует довольно много совпадений с точки зрения средств защиты, которые они предоставляют. Это было сделано намеренно, поскольку я надеюсь подробнее остановиться на некоторых методах запутывания в контексте нескольких комерс протов, прежде чем сосредоточиться конкретно на одном.</p>
+        
+        <h3 id="commercial-protectors">Комерс</h3>
+        
+        <ul>
+          <li>Obfuscator-LLVM (OLLVM) (*) - <a href="https://github.com/obfuscator-llvm/obfuscator/wiki">https://github.com/obfuscator-llvm/obfuscator/wiki</a></li>
+          <li>The Tigress C Diversifier/Obfuscator (*) - <a href="http://tigress.cs.arizona.edu/index.html">http://tigress.cs.arizona.edu/index.html</a></li>
+          <li>ReWolf’s Virtualizer (*) - <a href="https://github.com/rwfpl/rewolf-x86-virtualizer">https://github.com/rwfpl/rewolf-x86-virtualizer</a></li>
+          <li>ASProtect - <a href="http://www.aspack.com/asprotect64.html">http://www.aspack.com/asprotect64.html</a></li>
+          <li>Obsidium - <a href="https://www.obsidium.de/show/details/en">https://www.obsidium.de/show/details/en</a></li>
+          <li>PELock - <a href="https://www.pelock.com/products/pelock">https://www.pelock.com/products/pelock</a></li>
+          <li>Enigma Protector - <a href="https://enigmaprotector.com/">https://enigmaprotector.com/</a></li>
+          <li>CodeVirtualizer - <a href="https://www.oreans.com/codevirtualizer.php">https://www.oreans.com/codevirtualizer.php</a></li>
+          <li>Themida - <a href="https://www.oreans.com/themida.php">https://www.oreans.com/themida.php</a></li>
+          <li>VMProtect - <a href="https://vmpsoft.com/">https://vmpsoft.com/</a></li>
+          <li>GuardIT - <a href="https://www.arxan.com/application-protection/desktop-server">https://www.arxan.com/application-protection/desktop-server</a></li>
+        </ul>
+        
+        <p class="muted">Люди адекватные, не продают свою поебень</p>
+        
+        <p>Итак, это список (в первую очередь) коммерческих протов. Это само собой разумеется, но важно отметить: в мире цифер есть и другие примеры обфусцирование, некоторые из которых никогда не обрабатывались коммерческими приложениями защиты. Не заблуждайтесь: эти примеры ни в коем случае не выходят за рамки нашего исследования. Ниже я перечислил некоторые из таких примеров.</p>
+        
+        <h3 id="the-real-enemy">Представляющие угрозу</h3>
+        
+        <ul>
+          <li>ZeusVM - <a href="https://en.wikipedia.org/wiki/Zeus_(malware)">https://en.wikipedia.org/wiki/Zeus_(malware)</a></li>
+          <li>FinSpy VM - <a href="https://en.wikipedia.org/wiki/FinFisher">https://en.wikipedia.org/wiki/FinFisher</a></li>
+          <li>Nymaim - <a href="https://www.cyber.nj.gov/threat-profiles/trojan-variants/nymaim">https://www.cyber.nj.gov/threat-profiles/trojan-variants/nymaim</a></li>
+          <li>Smoke Loader - <a href="https://www.cyber.nj.gov/threat-profiles/trojan-variants/smoke-loader">https://www.cyber.nj.gov/threat-profiles/trojan-variants/smoke-loader</a></li>
+          <li>Swizzor - <a href="https://en.wikipedia.org/wiki/Swizzor">https://en.wikipedia.org/wiki/Swizzor</a></li>
+          <li>APT10 ANEL - <a href="https://en.wikipedia.org/wiki/Red_Apollo">https://en.wikipedia.org/wiki/Red_Apollo</a></li>
+          <li>xTunnel - <a href="https://en.wikipedia.org/wiki/Fancy_Bear">https://en.wikipedia.org/wiki/Fancy_Bear</a></li>
+          <li>Uroburos/Turla - <a href="https://en.wikipedia.org/wiki/Turla_(malware)">https://en.wikipedia.org/wiki/Turla_(malware)</a></li>
+        </ul>
+        
+        <p>Когда люди упоминают обфускацию, очень легко прийти к выводу о вирусне. Однако у этой медали есть и другая сторона, и без нее наш список был бы неполным. Ниже приведены примеры "законного" обфусцирования, которые я собрал. Это компании, стремящиеся скрыть внутреннюю работу своего кода по причинам, которые варьируются от денежного стимулирования до защиты прав потребителей (по крайней мере, так они говорят).</p>
+        
+        <h3 id="legitimate-obfuscation">"В благих целях"</h3>
+        
+        <ul>
+          <li>Skype - <a href="https://www.skype.com/en/">https://www.skype.com/en/</a></li>
+          <li>Spotify (See also <a href="https://en.wikipedia.org/wiki/Widevine">Widevine</a>) - <a href="https://www.spotify.com/us/">https://www.spotify.com/us/</a></li>
+          <li>Adobe Photoshop - <a href="https://www.adobe.com/products/photoshop.html">https://www.adobe.com/products/photoshop.html</a></li>
+          <li>BattlEye - <a href="https://www.battleye.com/">https://www.battleye.com/</a></li>
+          <li>EasyAntiCheat - <a href="https://www.easy.ac/en-us/">https://www.easy.ac/en-us/</a></li>
+          <li>Windows PatchGuard/Kernel Patch Protection - <a href="https://en.wikipedia.org/wiki/Kernel_Patch_Protection">https://en.wikipedia.org/wiki/Kernel_Patch_Protection</a></li>
+        </ul>
+        
+        <p>Краткое примечание: некоторые из вышеперечисленных приложений были защищены с помощью записей <a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#commercial-protectors">комерс проты</a> в нашем списке. В случае, если обфускация, реализованная этими приложениями, слишком сильно напоминает результаты работы наших коммерческих средств защиты, это будет указано и впоследствии опущено в будущих публикациях.</p>
+        
+        <hr>
+        
+        <h2 id="techniques-topics-and-prevalence">Техники, подтемы и прочая ерунда</h2>
+        
+        <p>В этом разделе я собираюсь описать методы обфускации, используемые вышеупомянутыми обфускаторами, и составить таблицу, чтобы представить распространенность указанных методов.</p>
+        
+        <h4 id="instruction-substitution">Instruction Substitution</h4>
+        
+        <p>Также известное как instruction mutation, </p>
+        
+        <blockquote>
+          <p>“...этот метод обфускации просто заключается в замене стандартных операторов (таких как addition, subtraction or boolean operators) функционально эквивалентными, но более сложными последовательностями инструкций”<sup id="fnref:cite12"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite12" class="footnote">1</a></sup></p>
+        </blockquote>
+        
+        <p>Хотя я считаю, что описание OLLVM этого метода отражает суть, я хотел бы немного обобщить его. Как бы ни был реализован этот метод, его основная цель заключается в изменении содержимого кода при сохранении исходной семантики. Этот метод не ограничивается числовыми операциями. До тех пор, пока результат преобразования функционально эквивалентен оригиналу, реализация полностью зависит от создателя.</p>
+        
+        <p>Давайте рассмотрим несколько примеров того, как это может работать.</p>
+        
+        <pre><code class="language-x86asm hljs"><span class="hljs-keyword">mov</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">1337h</span>
+        </code></pre>
+        
+        <p>Приведенный выше фрагмент кода на асме может быть преобразован во что-то вроде следующего:</p>
+        
+        <pre><code class="language-x86asm hljs"><span class="hljs-keyword">add</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">266Ch</span>
+        <span class="hljs-keyword">shr</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">1h</span>
+        <span class="hljs-keyword">inc</span> <span class="hljs-built_in">eax</span>
+        </code></pre>
+        
+        <p>Хотя эти два фрагмента могут выглядеть по-разному, но они всё равно функционально эквивалентны. Ниже я включил различные фазы примера функции, поскольку она преобразуется в соответствии с instruction substitution pass в OLLVM.</p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/example_function_c_source.png" alt="Example function C source code" title="Example function C source code">
+        	<div>Original C Source Code</div>
+        </div>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/example_function_disasm.png" alt="Example function disassembly" title="Example function disassembly">
+        	<div>Clean Function Disassembly</div>
+        </div>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/example_function_mutated_disasm.png" alt="Example function obfuscated disassembly" title="Example function obfuscated disassembly">
+        	<div>Obfuscated Function Disassembly</div>
+        </div>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/img-sep.png">
+        </div>
+        
+        <h4 id="control-flow-flattening">Control Flow Flattening</h4>
+        
+        
+        
+        <blockquote>
+          <p>Целью cfg является “полное сглаживание cfg программы”.<sup id="fnref:cite0"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite0" class="footnote">2</a></sup></p>
+        </blockquote>
+        
+        <p>The <a href="https://en.wikipedia.org/wiki/Control-flow_graph">control flow graph</a>здесь имеются в виду различные графы, сгенерированные инструментами анализа, которые показывают layout в виде <a href="https://en.wikipedia.org/wiki/Basic_block">basic blocks</a>.</p>
+        
+        <p>В дальнейшем,</p>
+        <blockquote>
+          <p>“В cfg каждый узел(node) в графе представляет собой базовый блок, то есть прямолинейный фрагмент кода без каких-либо переходов или целей перехода; цели перехода начинают блок, а переходы заканчивают блок. Направленные edges используются для представления переходов в cf. В большинстве презентаций есть два специально выделенных блока: блок входа, через который управление поступает в граф потока, и блок выхода, через который весь cf выходит.”<sup id="fnref:cite1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite1" class="footnote">3</a></sup></p>
+        </blockquote>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/dummy_program_source.png" alt="Dummy test program C source code" title="Dummy test program C source code">
+        	<div>The original source code</div>
+        </div>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/dummy_program_asm.png" alt="Dummy test program assembly code" title="Dummy test program assembly code">
+        	<div>The disassembly for our test function</div>
+        </div>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/ollvm_control_flow_flattening_pass.png" alt="Test function after OLLVM control flow flattening obfuscation" title="Test function after OLLVM control flow flattening obfuscation">
+        	<div>The disassembly for our test function after being ran through one of OLLVM's control flow flattening obfuscation passes</div>
+        </div>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/img-sep.png">
+        </div>
+        
+        <h4 id="indirect-branches">Indirect Branches</h4>
+        
+        <p>An indirect branch,</p>
+        
+        <blockquote>
+          <p>“...вместо указания адреса следующей инструкции для выполнения, как в direct branch, аргумент указывает, где находится адрес”<sup id="fnref:cite2"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite2" class="footnote">4</a></sup></p>
+        </blockquote>
+        
+        <p>Простой способ представить это - последовательность инструкций, подобная следующей:</p>
+        <pre><code class="language-x86asm hljs"><span class="hljs-keyword">mov</span> <span class="hljs-built_in">eax</span>, function_address
+        ...
+        <span class="hljs-keyword">jmp</span> <span class="hljs-built_in">eax</span>
+        </code></pre>
+        <p>Вот пример indirect branch, взятый из одной из вышеперечисленных программ. Эта программа пронизана барчами, которые выглядят точно так же; и в то время IDA не могла следить за ними.</p>
+        
+        <p><img src="https://calwa.re/assets/ida-indirect-jump.png" alt="indirect branch ida"></p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/img-sep-2.png">
+        </div>
+        
+        <h4 id="opaque-predicates">Opaque Predicates</h4>
+        
+        <blockquote>
+          <p>“an opaque predicate is a predicate—an expression that evaluates to either “true” or “false”—for which the outcome is known by the programmer … but which, for a variety of reasons, still needs to be evaluated at run time” <sup id="fnref:cite3"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite3" class="footnote">5</a></sup></p>
+        </blockquote>
+        
+        <p>Opaque predicates  это особенно неприятная форма запутывания потока управления. Они бывают всех форм и размеров и определение opaque-<em>ness </em>может оказаться довольно сложной задачей.</p>
+        
+        <p>Чтобы расширить приведенное выше объяснение, в контексте обфусцирвоанного файла это выражение “true” или “false” вычисляется в форме conditional branch. Ниже я включил небольшой пример <em>opaque</em> predicate.</p>
+        
+        <pre><code class="language-x86asm hljs"><span class="hljs-keyword">mov</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">4h</span>
+        ...
+        <span class="hljs-keyword">cmp</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">4h</span>
+        <span class="hljs-symbol">je label</span>_1
+        <span class="hljs-keyword">mov</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">224h</span> <span class="hljs-comment">; * this will never execute</span>
+        <span class="hljs-symbol">jmp label</span>_187 <span class="hljs-comment">; *</span>
+        <span class="hljs-symbol">label_1:</span>
+        <span class="hljs-keyword">mov</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">22h</span>
+        ...
+        </code></pre>
+        
+        <p>Теперь, как вы можете ожидать, это нереалистичный пример opaque predicate. Однако этот пример действительно иллюстрирует идею использования conditional branches для обфускации cf программы. И хотя этот пример явно довольно прост, большинство реализаций этого метода таковыми не являются. Например, приведенная выше форма opaque predicate иногда упоминается как <em>invariant</em> opaque predicate. <sup id="fnref:cite15"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite15" class="footnote">6</a></sup>Также есть<em>contextual</em> opaque predicates, значение которого не является самодостаточным, но которое зависит от значения внешней переменной (invariant). <sup id="fnref:cite15:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite15" class="footnote">6</a></sup>Также не стоит забывать о <em>dynamic</em> opaque predicates, которые являются частью группировки предикатов, расположенных таким образом, что все возможные пути выполняют одну и ту же базовую функциональность. <sup id="fnref:cite15:2"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite15" class="footnote">6</a></sup> <sup id="fnref:cite16"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite16" class="footnote">7</a></sup>- Все это лишь верхушка айсберга.</p>
+        
+        <p>Opaque predicates также обычно возникают проблемы в аналитических платформах, когда делаются определенные предположения. Например, IDA Pro - это один из примеров инструмента, который ожидает хорошего, корректного кода. <sup id="fnref:cite17"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite17" class="footnote">8</a></sup>Ниже я привел пример того, что может произойти, когда вы нарушаете предположения, сделанные в ходе бинарного анализа IDA.</p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/fasm_opaque_predicate.png" alt="Opaque predicate assembly source code" title="Opaque predicate assembly source code">
+        	<div>'Opaque' predicate assembly code</div>
+        </div>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/ida_disassembles_opaque_predicate.png" alt="IDA Pro disassembling opaque predicate" title="IDA Pro disassembling opaque predicate">
+        	<div>IDA Pro continues to disassemble the code</div>
+        </div>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/fasm_opaque_predicate_confuse_analysis_2.png" alt="Creating an improved opaque predicate to confuse IDA Pro in FASM">
+        	<div>Improved 'opaque' predicate assembly code</div>
+        </div>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/ida_confused_analysis_2.png" alt="IDA Pro confused analysis when finding our previously created opaque predicate" title="IDA Pro confused analysis when finding our previously created opaque predicate">
+        	<div>Confusing IDA's analysis hides proceeding instructions</div>
+        </div>
+        
+        <p>Как вы можете видеть в приведенной выше демонстрации, даже простые попытки отключить инструменты анализа могут значительно изменить выходные данные. Здесь IDA сделала предположение, что один фиктивный байт данных в нашем opaque predicate был <a href="http://www.c-jump.com/CIS77/CPU/x86/lecture.html#X77_0040_opcode_sizes">opcode expansion prefix</a> вынуждающим команду требовать по крайней мере еще один байт. Этот следующий байт, конечно же, вставлялся в реальную инструкцию, которая должна была быть выполнена.</p>
+        
+        <p>Если кто-то не обращал внимания, вы могли бы пропустить, что IDA сигнализировала об этом преобразовании в инструкции<code class="language-plaintext highlighter-rouge">jz short near ptr loc_40100E+1</code>где<code class="language-plaintext highlighter-rouge">+1</code>в конце внимательный реверс-инженер сообщит, что начальный бранч пропускает один байт в своем целевом местоположении. Ниже я показал очень простое исправление для этого преобразования.</p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/ida_confused_analysis_2_fix.png" alt="IDA Pro FASM opaque predicate confused analysis fix" title="IDA Pro FASM opaque predicate confused analysis fix">
+        	<div>Simple fix for the above transformation</div>
+        </div>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/img-sep.png">
+        </div>
+        
+        <h3 id="function-inlining">Function Inlining</h3>
+        
+        <blockquote>
+          <p>“В нормальной терминалогии inline expansion, или inlining, - это оптимизация вручную или компилятором, которая заменяет function call site  телом вызываемой функции”<sup id="fnref:cite4"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite4" class="footnote">9</a></sup></p>
+        </blockquote>
+        
+        <p>Function inlining - это хорошо известный метод оптимизации компилятора. <sup id="fnref:cite5"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite5" class="footnote">10</a></sup>Вас не должно удивлять, что при неправильном использовании и в сочетании с другими нашими методами обфускации inline expansion может стать довольно эффективным средством обфускации. Возьмем следующий пример:</p>
+        
+        <pre><code class="language-C hljs"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">bar</span> <span class="hljs-params">(<span class="hljs-keyword">int</span> val)</span>
+        </span>{
+        	<span class="hljs-keyword">return</span> val * <span class="hljs-number">2</span>;
+        }
+        
+        <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">foo</span> <span class="hljs-params">(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b)</span>
+        </span>{
+        	<span class="hljs-keyword">int</span> c = bar(b);
+        	<span class="hljs-keyword">return</span> a + c;
+        }
+        </code></pre>
+        
+        <p>Чтобы уменьшить накладные расходы при этом вызове, ваш компилятор может выполнить inline expansion и разрешить функцию<code class="language-plaintext highlighter-rouge">bar</code>будет inlined into <code class="language-plaintext highlighter-rouge">foo</code>, показано ниже:</p>
+        
+        <pre><code class="language-C hljs"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">foo</span> <span class="hljs-params">(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b)</span>
+        </span>{
+        	<span class="hljs-keyword">int</span> c = b * <span class="hljs-number">2</span>;
+        	<span class="hljs-keyword">return</span> a + c;
+        }
+        </code></pre>
+        
+        <p>Что, конечно, можно было бы еще больше уменьшить, устранив зависимость от переменной <code class="language-plaintext highlighter-rouge">c</code>, но вы поняли суть</p>
+        
+        <p>Теперь представьте, что вместо умножения числа на два функция<code class="language-plaintext highlighter-rouge">bar</code>  отвечала за запись информации о времени выполнения в файл. В этой гипотетической функции логирования предположим, что мы также решили реализовать логику "с сюрпризом" относительно типа информации, которую мы регистрируем. Если функция <code class="language-plaintext highlighter-rouge">foo</code>вызывалась бы для логирования, даже всего пару раз, вы уже можете начать представлять, насколько наша функция расширилась бы на уровне source level; не говоря уже о дизассемблинге.</p>
+        
+        <p>Иронично: наиболее эффективное средство упрощения inlining function также используется в качестве метода обфускации.</p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/img-sep-2.png">
+        </div>
+        
+        <h3 id="function-outlining">Function Outlining</h3>
+        <blockquote>
+          <p>“Выделите фрагментов функции в их собственные функции”<sup id="fnref:cite6"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite6" class="footnote">11</a></sup></p>
+        </blockquote>
+        
+        <p>Синонимом function splitting является широкое определение (и дальнейшая реализация) выделения функций. Некоторые протекторы просто разделяют базовые блоки функции, которые затем сохраняют прямое отношение "один к одному" внутри своей parent функции. Некоторые другие средства защиты создают совершенно новые функции, используемые несколькими разными callers. Например, возьмем следующую диаграмму:</p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/function-splitting-tigress-asu.png" alt="function splitting asu tigress">
+        	<div>ASU's Tigress C Obfuscator "Function Splitting" Diagram (<a href="http://tigress.cs.arizona.edu/transformPage/docs/split/index.html" target="_blank">source</a>)</div>
+        </div>
+        
+        <p>Приведенное выше изображение должно означать, что новые функции, <code class="language-plaintext highlighter-rouge">f1</code> и <code class="language-plaintext highlighter-rouge">f2</code>, могут содержать код, который не был изначально представлен в оригинальной функции<code class="language-plaintext highlighter-rouge">f</code>(например, пролог и эпилог). Это преобразование затем включило бы другие функции, которые могут полагаться на функциональность<code class="language-plaintext highlighter-rouge">f1</code> или <code class="language-plaintext highlighter-rouge">f2</code>, "опустить"(подразумевается как забыть) свой собственный код и вместо этого полагаться на outlined функцию.</p>
+        
+        <p>Позже мы рассмотрим, как именно эта функция реализована в Tigress. Тем временем мы можем провести интересное сравнение с OLLVM. В отличие от подразумеваемой функции Tigress, описывающей реализацию, OLLVM ведет себя прямо противоположным образом. Дизассемблирование OLLVM сохранит прямую связь "one-to-one" со своим parent объектом в случае splitting pass.</p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/img-sep.png">
+        </div>
+        
+        <h3 id="dead-code">Dead Code</h3>
+        
+        <blockquote>
+          <p>“…dead code - некая часть в asm коде программы, который выполняется, но результат которого никогда не используется ни в каких других вычислениях“ <sup id="fnref:cite13"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite13" class="footnote">12</a></sup></p>
+        </blockquote>
+        
+        <p>Кроме того, может быть важно отметить: регистры, которые мертвый код использует на протяжении всего своего жизненного цикла, иногда называются <em>dead registers</em>.<sup class="fn-m">!</sup></p>
+        
+        <p>Здесь я включил небольшой фрагмент асм кода, который включает в себя только выполняющийся код(тот код, который в случае невыполнения влияет на результаты).</p>
+        
+        <pre><code class="language-x86asm hljs"><span class="hljs-keyword">mov</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">2h</span>
+        <span class="hljs-keyword">add</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">2h</span>
+        <span class="hljs-keyword">cmp</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">4h</span>
+        ...
+        </code></pre>
+        
+        <p>Ниже я переработал наш приведенный выше пример с помощью нескольких инструкций, которые соответствуют приведенному выше определению мертвого кода. Эти инструкции отмечены звездочками.</p>
+        
+        <pre><code class="language-x86asm hljs"><span class="hljs-keyword">mov</span> <span class="hljs-built_in">ebx</span>, <span class="hljs-number">24h</span> <span class="hljs-comment">; *</span>
+        <span class="hljs-keyword">mov</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">2h</span>
+        <span class="hljs-keyword">add</span> <span class="hljs-built_in">ebx</span>, <span class="hljs-number">12h</span> <span class="hljs-comment">; *</span>
+        <span class="hljs-keyword">add</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">2h</span>
+        <span class="hljs-keyword">mov</span> <span class="hljs-built_in">ecx</span>, <span class="hljs-built_in">ebx</span> <span class="hljs-comment">; *</span>
+        <span class="hljs-keyword">inc</span> <span class="hljs-built_in">ecx</span> <span class="hljs-comment">; *</span>
+        <span class="hljs-keyword">cmp</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">4h</span>
+        ...
+        </code></pre>
+        
+        <p>Поскольку приведенный выше мертвый код занимает регистры <code class="language-plaintext highlighter-rouge">ebx</code> и <code class="language-plaintext highlighter-rouge">ecx</code>, эти регистры теперь можно рассматривать <em>мертвыми</em>. Однако это не означает, что эти регистры всегда будут оставаться мертвыми. Занятие не-мертвыми,<em>living</em> code, восстановит статус живых =) <code class="language-plaintext highlighter-rouge">ebx</code> и <code class="language-plaintext highlighter-rouge">ecx</code>.</p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/img-sep-2.png">
+        </div>
+        
+        <h3 id="junk-code">Junk Code</h3>
+        
+        <p>Также известный как unreachable code,</p>
+        
+        <blockquote>
+          <p>“… То, что никогда не выполнится, так как CF никогда этого не достигнет” <sup id="fnref:cite14"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite14" class="footnote">13</a></sup></p>
+        </blockquote>
+        
+        <p>Одна из вещей, которую приведенный выше фрагмент не распознает, заключается в том, что в случае opaque predicate, вторичное условие которого никогда не выполняется, будет существовать CF к его местоположению. Я создал пример этого ниже:</p>
+        
+        <pre><code class="language-x86asm hljs"><span class="hljs-keyword">mov</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">4h</span>
+        ...
+        <span class="hljs-keyword">cmp</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">4h</span>
+        <span class="hljs-symbol">je label</span>_1 		<span class="hljs-comment">; (A)</span>
+        <span class="hljs-keyword">mov</span> <span class="hljs-built_in">ecx</span>, <span class="hljs-number">1h</span> 		<span class="hljs-comment">; * this will never execute</span>
+        <span class="hljs-keyword">sub</span> <span class="hljs-built_in">ebx</span>, <span class="hljs-built_in">ecx</span> 		<span class="hljs-comment">; *</span>
+        <span class="hljs-keyword">push</span> <span class="hljs-built_in">ebx</span> 		<span class="hljs-comment">; *</span>
+        <span class="hljs-keyword">call</span> function_224	<span class="hljs-comment">; *</span>
+        <span class="hljs-symbol">label_1:</span> 		<span class="hljs-comment">; (B)</span>
+        ...
+        </code></pre>
+        
+        <p>Инструкции, вложенные между jcc (A) и нашей первой меткой (B), являются junk code; они никогда не будут выполнены. Однако это не останавливает существование CF к их местоположению.</p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/img-sep.png">
+        </div>
+        
+        <h3 id="constant-folding">Constant Folding</h3>
+        
+        <p>Чтобы понять идею constant unfolding (см. ниже), ты должен сначала понять идею constant folding.</p>
+        
+        <blockquote>
+          <p>“Constant folding - это процесс распознавания и оценки постоянных выражений во время компиляции, а не вычисления их во время выполнения.” <sup id="fnref:cite7"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite7" class="footnote">14</a></sup></p>
+        </blockquote>
+        
+        <p>Предположим, мы начали с фрагмента кода, подобного следующему: </p>
+        
+        <pre><code class="language-C hljs"><span class="hljs-keyword">int</span> x = <span class="hljs-number">220</span>;
+        <span class="hljs-keyword">int</span> y = (x / <span class="hljs-number">2</span>) + <span class="hljs-number">1</span>;
+        </code></pre>
+        
+        <p>Constant folding, в данном случае это просто сокращение выражения, на которое указывает наша переменная <code class="language-plaintext highlighter-rouge">y</code>во время выполнения: </p>
+        
+        <pre><code class="language-C hljs"><span class="hljs-keyword">int</span> x = <span class="hljs-number">220</span>;
+        <span class="hljs-keyword">int</span> y = <span class="hljs-number">111</span>;
+        </code></pre>
+        
+        <p>Как указывалось выше, constant folding - это форма оптимизации, выполняемая компиляторами. Непосредственно, это не тот метод, который обычно соответствует обфускации кода<sup class="fn-m">!</sup>; но, учитывая контекст, constant folding вполне может быть использован как средство для скрытия функции кода; как это происходит со многими оптимизациями компилятора.</p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/img-sep-2.png">
+        </div>
+        
+        <h3 id="constant-unfolding">Constant Unfolding</h3>
+        
+        <p>В то время как в качестве метода обфускации можно использовать как constant folding, так и constant unfolding, чаще наблюдается constant unfolding.<sup class="fn-m">!</sup></p>
+        
+        <p>Учитывая приведенный выше пример constant folding, я сконструировал более сложный пример constant unfolding ниже. Кое-что, о чем следует помнить: хотя constant folding и unfolding кажется легким делом, не позволяйте этому ввести вас в заблуждение. Помните, что сила обычно заключается в реализации.</p>
+        
+        <pre><code class="language-C hljs"><span class="hljs-keyword">int</span> x = <span class="hljs-number">220</span>;
+        <span class="hljs-keyword">int</span> y = (((x - <span class="hljs-number">0xAA</span>) | <span class="hljs-number">0x58</span>) ^ (((((x / <span class="hljs-number">4</span>) * <span class="hljs-number">0x138759</span>) &gt;&gt; <span class="hljs-number">0x10</span>) &amp; <span class="hljs-number">0x11</span>) + <span class="hljs-number">0x6</span>)) + <span class="hljs-number">0x3</span>;
+        </code></pre>
+        
+        <p><img src="https://calwa.re/assets/constant-unfolding-python-simplification.png" alt="constant unfolding python simplification"></p>
+        
+        <p>Итак, на минутку представьте, что приведенная выше арифметика выполняется в асме, среди других операций, через flattened функцию, и все это выполняется через VM.</p>
+        
+        <p></p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/img-sep.png">
+        </div>
+        
+        <h3 id="virtualization">Virtualization</h3>
+        
+        <blockquote>
+          <p>“Vcpu” <sup id="fnref:cite8"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite8" class="footnote">15</a></sup></p>
+        </blockquote>
+        
+        <p>Это оно.</p>
+        
+        <p>Виртуальные машины, используемые при обфускации кода, не похожи на <a href="https://www.vmware.com/solutions/virtualization.html">VMware</a> или <a href="https://www.virtualbox.org/wiki/VirtualBox">VirtualBox</a>. У них нет подобных технологий <a href="https://en.wikipedia.org/wiki/AMD-V">AMD-V</a> или <a href="https://en.wikipedia.org/wiki/Intel_VT-x">Intel VT-x</a>(к счастью). Вместо этого VM, найденные в обфусцированных двоичных файлах, являются просто интерпретаторами.<sup class="fn-m">!</sup></p>
+        
+        <p>Исходный, невиртуализированный код базового файла был преобразован в пользовательский байт-код(PCODE). Этот PCODE передается интерпретатору, задачей которого является имитация действий указанного базового двоичного файла.</p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/codevirtualizer_vm_transformation.jpg" alt="CodeVirtualizer VM obfuscation transformation comparison assembly source diagram" title="CodeVirtualizer VM obfuscation transformation comparison assembly source diagram">
+        	<div>Orean's CodeVirtualizer vm-based protection diagram (<a href="https://www.oreans.com/CodeVirtualizer.php" target="_blank">source</a>)</div>
+        </div>
+        
+        <p>Выше я прикрепил скрин работы комерс вирты<a href="https://www.oreans.com/CodeVirtualizer.php">CodeVirtualizer</a>. Как вы можете видеть, упрощенный код слева преобразуется в совершенно другой набор команд справа.</p>
+        
+        <p>Я понимаю, что приведенного выше объяснения не хватает. Проблема с подробным описанием этого метода обфускации сейчас заключается в потенциальной вариативности его реализации. Итак, давайте поставим точку в этом вопросе. Я значительно подробнее остановлюсь на этой технике в следующих постах.</p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/img-sep.png">
+        </div>
+        
+        <h3 id="self-modification">Self Modification</h3>
+        
+        
+        
+        <p>Это код, который изменяет сам себя, сейчас бы не хотелось говорить об этом, так как он тоже зависит от реализации</p>
+        
+        <p>Однако мне не терпится изучить эту технику, поскольку она потребует от нас создания нескольких примеров для отработки.</p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/img-sep-2.png">
+        </div>
+        
+        <h3 id="jitting">Jitting</h3>
+        
+        <p>Наконец, я хочу кратко обсудить концепцию <em>jitting</em>.</p>
+        
+        <blockquote>
+          <p>“В нормальной терминологии JIT-компиляция (также динамическая трансляция или компиляции во время выполнения) - это способ выполнения кода, который включает компиляцию во время выполнения программы - во время выполнения – а не перед выполнением”.<sup id="fnref:cite10"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite10" class="footnote">17</a></sup></p>
+        </blockquote>
+        
+        <p>Можно многое сказать о потенциале этой техники. Это тот, который, как я полагаю, используется только в <a href="http://tigress.cs.arizona.edu/index.html">Tigress C Diversifier</a>. Это также техника, которую мы будем развивать в примерах, которые мы создаем.</p>
+        
+        <p>Что интересно так это то, что<a href="http://tigress.cs.arizona.edu/index.html">Tigress</a> также включает в себя возможность реализовать преобразование, называемое <em>JitDynamic</em>, который “... похож на Jit-преобразование, за исключением того, что jit-код постоянно модифицируется и обновляется во время выполнения”<sup id="fnref:cite11"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite11" class="footnote">18</a></sup>. Тогда этот метод было бы лучше классифицировать как самоизменяющийся код.</p>
+        
+        <p>Приведенная ниже таблица в значительной степени основана на информации, которую я прочитал у других; и процитирована соответствующим образом. Данные, в которых отсутствуют ссылки, в значительной степени спекулятивны или подкреплены проведенными мной исследованиями, которые не будут обнародованы. Приложения, методы и порядок их использования - все это может быть изменено. Со временем этот фрагмент будет заменен, и вместо существующих ниже будут использованы цитаты из моего собственного исследования. А пока отнеситесь ко всему, что приведено в таблице ниже, с недоверием и ознакомьтесь с этими цитатами (если таковые имеются).</p>
+        
+        <hr>
+        
+        <h3 id="commercial-obfuscations">Commercial Obfuscations</h3>
+        
+        <div style="overflow-x: scroll;"><table>
+          <thead>
+            <tr>
+              <th style="text-align: center">Application</th>
+              <th style="text-align: center">Instruction Substitution</th>
+              <th style="text-align: center">Control Flow Modification</th>
+              <th style="text-align: center">Indirect Branches</th>
+              <th style="text-align: center">Opaque Predicates</th>
+              <th style="text-align: center">Function Inlining</th>
+              <th style="text-align: center">Function Outlining</th>
+              <th style="text-align: center">Dead Code</th>
+              <th style="text-align: center">Junk Code</th>
+              <th style="text-align: center">Constant Unfolding</th>
+              <th style="text-align: center">Virtualization</th>
+              <th style="text-align: center">Self Modification</th>
+              <th style="text-align: center">Jitting</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align: center">Tigress</td>
+              <td style="text-align: center">✅<sup id="fnref:cite18"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite18" class="footnote">19</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite18:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite18" class="footnote">19</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite18:2"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite18" class="footnote">19</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite18:3"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite18" class="footnote">19</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite18:4"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite18" class="footnote">19</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite18:5"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite18" class="footnote">19</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite18:6"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite18" class="footnote">19</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite18:7"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite18" class="footnote">19</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite18:8"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite18" class="footnote">19</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite18:9"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite18" class="footnote">19</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite18:10"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite18" class="footnote">19</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite18:11"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite18" class="footnote">19</a></sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">Themida</td>
+              <td style="text-align: center">✅<sup id="fnref:cite19"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite19" class="footnote">20</a></sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite19:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite19" class="footnote">20</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">VMProtect</td>
+              <td style="text-align: center">✅<sup id="fnref:cite20"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite20" class="footnote">21</a></sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite20:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite20" class="footnote">21</a></sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">✅<sup id="fnref:cite20:2"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite20" class="footnote">21</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite20:3"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite20" class="footnote">21</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite20:4"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite20" class="footnote">21</a></sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite20:5"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite20" class="footnote">21</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">GuardIT</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+            </tr>
+            <tr>
+              <td style="text-align: center">PELock</td>
+              <td style="text-align: center">✅<sup id="fnref:cite21"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite21" class="footnote">22</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite21:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite21" class="footnote">22</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite21:2"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite21" class="footnote">22</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite21:3"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite21" class="footnote">22</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite21:4"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite21" class="footnote">22</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite21:5"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite21" class="footnote">22</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite21:6"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite21" class="footnote">22</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">OLLVM</td>
+              <td style="text-align: center">✅<sup id="fnref:cite22"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite22" class="footnote">23</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite23"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite23" class="footnote">24</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite24"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite24" class="footnote">25</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite23:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite23" class="footnote">24</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite24:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite24" class="footnote">25</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite22:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite22" class="footnote">23</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">CodeVirtualizer</td>
+              <td style="text-align: center">✅<sup id="fnref:cite25"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite25" class="footnote">26</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite25:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite25" class="footnote">26</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">ReWolf’s Virtualizer</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite26"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite26" class="footnote">27</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">Enigma Protector</td>
+              <td style="text-align: center">✅<sup id="fnref:cite27"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite27" class="footnote">28</a></sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">✅<sup id="fnref:cite27:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite27" class="footnote">28</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">Obsidium</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">✅<sup id="fnref:cite28"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite28" class="footnote">29</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">ASProtect</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">✅<sup id="fnref:cite29"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite29" class="footnote">30</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite29:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite29" class="footnote">30</a></sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+          </tbody>
+        </table></div>
+        
+        <h3 id="malware-obfuscations">Malware Obfuscations</h3>
+        
+        <div style="overflow-x: scroll;"><table>
+          <thead>
+            <tr>
+              <th style="text-align: center">Application</th>
+              <th style="text-align: center">Instruction Substitution</th>
+              <th style="text-align: center">Control Flow Modification</th>
+              <th style="text-align: center">Indirect Branches</th>
+              <th style="text-align: center">Opaque Predicates</th>
+              <th style="text-align: center">Function Inlining</th>
+              <th style="text-align: center">Function Outlining</th>
+              <th style="text-align: center">Dead Code</th>
+              <th style="text-align: center">Junk Code</th>
+              <th style="text-align: center">Constant Unfolding</th>
+              <th style="text-align: center">Virtualization</th>
+              <th style="text-align: center">Self Modification</th>
+              <th style="text-align: center">Jitting</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align: center">ANEL</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite30"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite30" class="footnote">31</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite30:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite30" class="footnote">31</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite30:2"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite30" class="footnote">31</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite30:3"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite30" class="footnote">31</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite30:4"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite30" class="footnote">31</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite30:5"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite30" class="footnote">31</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">Smoke Loader</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite31"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite31" class="footnote">32</a></sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">✅<sup id="fnref:cite31:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite31" class="footnote">32</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite31:2"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite31" class="footnote">32</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite31:3"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite31" class="footnote">32</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">Nymaim</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite32"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite32" class="footnote">33</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite32:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite32" class="footnote">33</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite33"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite33" class="footnote">34</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">✅<sup id="fnref:cite33:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite33" class="footnote">34</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">xTunnel</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">✅<sup id="fnref:cite34"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite34" class="footnote">35</a></sup> <sup id="fnref:cite35"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite35" class="footnote">36</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite36"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite36" class="footnote">37</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite34:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite34" class="footnote">35</a></sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">Uroburos/Turla</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">✅<sup id="fnref:cite37"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite37" class="footnote">38</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">✅<sup id="fnref:cite37:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite37" class="footnote">38</a></sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">FinSpy VM</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite39"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite39" class="footnote">39</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite39:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite39" class="footnote">39</a></sup></td>
+              <td style="text-align: center">✅!</td>
+              <td style="text-align: center">✅<sup id="fnref:cite39:2"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite39" class="footnote">39</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite38"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite38" class="footnote">40</a></sup> <sup id="fnref:cite39:3"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite39" class="footnote">39</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">ZeusVM</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">✅<sup id="fnref:cite40"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite40" class="footnote">41</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">Swizzor</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite41"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite41" class="footnote">42</a></sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+          </tbody>
+        </table></div>
+        
+        <h3 id="legitimate-obfuscations">‘Legitimate’ Obfuscations</h3>
+        
+        <div style="overflow-x: scroll;"><table>
+          <thead>
+            <tr>
+              <th style="text-align: center">Application</th>
+              <th style="text-align: center">Instruction Substitution</th>
+              <th style="text-align: center">Control Flow Modification</th>
+              <th style="text-align: center">Indirect Branches</th>
+              <th style="text-align: center">Opaque Predicates</th>
+              <th style="text-align: center">Function Inlining</th>
+              <th style="text-align: center">Function Outlining</th>
+              <th style="text-align: center">Dead Code</th>
+              <th style="text-align: center">Junk Code</th>
+              <th style="text-align: center">Constant Unfolding</th>
+              <th style="text-align: center">Virtualization</th>
+              <th style="text-align: center">Self Modification</th>
+              <th style="text-align: center">Jitting</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align: center">BattlEye</td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">EasyAntiCheat</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+            </tr>
+            <tr>
+              <td style="text-align: center">Photoshop</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+            </tr>
+            <tr>
+              <td style="text-align: center">Spotify</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+            </tr>
+            <tr>
+              <td style="text-align: center">PatchGuard</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite42"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite42" class="footnote">43</a></sup> <sup id="fnref:cite45"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite45" class="footnote">44</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite43"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite43" class="footnote">45</a></sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite44"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite44" class="footnote">46</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+            <tr>
+              <td style="text-align: center">Skype</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite46"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite46" class="footnote">47</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite46:1"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite46" class="footnote">47</a></sup></td>
+              <td style="text-align: center">✅<sup id="fnref:cite46:2"><a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fn:cite46" class="footnote">47</a></sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❔</td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+              <td style="text-align: center">❌<sup class="fn-m">!</sup></td>
+            </tr>
+          </tbody>
+        </table></div>
+        
+        <p>Примечание: Во многих вышеуказанных приложениях используются различные формы модификации CF, которые не являются CF flattening. Таким образом, я обобщил эту категорию в таблице выше.</p>
+        
+        <hr>
+        
+        <h1 id="a-conclusion-for-now">Вывод</h1>
+        
+        <p>В этом посте я сделал несколько смелых и амбициозных заявлений. Системы, подобные <a href="https://en.wikipedia.org/wiki/Kernel_Patch_Protection">PatchGuard</a> они мне совершенно неизвестны. Вредоносное ПО, подобное <a href="https://en.wikipedia.org/wiki/Turla_(malware)">Turla</a> и <a href="https://en.wikipedia.org/wiki/Fancy_Bear">Sednit</a>это спонсируемые государством угрозы с высокоприоритетными целями. Не говоря уже о том, что обфускация, используемое всеми вышеперечисленными защитами и т.п. штукой, считается сложным - очень трудным для работы материалом. Существует нехватка простых, прямолинейных решений; и исследования по разработке такого инструментария, как правило, проводятся в академических кругах.</p>
+        
+        <p>Нет никаких сомнений в том, что предстоящий путь будет долгим и сложным. Это потребует от меня многого узнать о том, как реализуются эти методы и как мы можем лучше их обойти.</p>
+        
+        <p>Как бы то ни было, сейчас я даю вам обещание: мое исследование <strong>будет </strong>применимо к современной обфускации. Я не буду отклоняться от <a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#goals">цели, которые я сформулировал изначально</a>.</p>
+        
+        <div class="img-cont">
+        	<img src="https://calwa.re/assets/img-sep.png">
+        </div>
+        
+        <h1 id="additional-reading">Чтиво</h1>
+        
+        <p>Выше я упоминал, что наиболее заметные исследования в области деобфускации в основном проводятся в академических кругах. Обычно эти ресурсы сухие, и их трудно прочесть. Итак, чтобы не утомлять вас скучными и умозрительными исследованиями, ниже я сделал все возможное, чтобы перечислить ресурсы, которые, по моему мнению, были практичными и привлекательными.</p>
+        
+        <ul id="list-spaced">
+          <li><em>Diablo - Deobfuscation: By Hand</em> (<a href="https://diablo.elis.ugent.be/node/54">https://diablo.elis.ugent.be/node/54</a>)</li>
+          <li><em>The Tigress C Diversifier/Obfuscator: Transformations</em> (<a href="http://tigress.cs.arizona.edu/transformPage/index.html">http://tigress.cs.arizona.edu/transformPage/index.html</a>)</li>
+          <li><em>Intermediate Representation - Wikipedia</em> (<a href="https://en.wikipedia.org/wiki/Intermediate_representation">https://en.wikipedia.org/wiki/Intermediate_representation</a>)</li>
+          <li><em>Usenix - Disassembling Obfuscated Binaries</em> (<a href="https://www.usenix.org/legacy/publications/library/proceedings/sec04/tech/full_papers/kruegel/kruegel_html/node3.html">https://www.usenix.org/legacy/publications/library/proceedings/sec04/tech/full_papers/kruegel/kruegel_html/node3.html</a>)</li>
+          <li><em>Optimizing Compiler (Specific Techniques) - Wikipedia</em> (<a href="https://en.wikipedia.org/wiki/Optimizing_compiler#Specific_techniques">https://en.wikipedia.org/wiki/Optimizing_compiler#Specific_techniques</a>)</li>
+          <li><em>Compiler Optimizations for Reverse Engineers - Rolf Rolles, Mobius Strip Reverse Engineering</em> (<a href="https://www.msreverseengineering.com/blog/2014/6/23/compiler-optimizations-for-reverse-engineers">https://www.msreverseengineering.com/blog/2014/6/23/compiler-optimizations-for-reverse-engineers</a>)</li>
+          <li><em>Udupa, Sharath K., Saumya K. Debray, and Matias Madou. “Deobfuscation: Reverse engineering obfuscated code.” 12th Working Conference on Reverse Engineering (WCRE’05). IEEE, 2005.</em> (<a href="https://ieeexplore.ieee.org/abstract/document/1566145">https://ieeexplore.ieee.org/abstract/document/1566145</a>)</li>
+          <li><em>Deobfuscation: recovering an OLLVM-protected program</em> (<a href="https://blog.quarkslab.com/deobfuscation-recovering-an-ollvm-protected-program.html">https://blog.quarkslab.com/deobfuscation-recovering-an-ollvm-protected-program.html</a>)</li>
+          <li><em>Aspire - Publications</em> (<a href="https://aspire-fp7.eu/papers">https://aspire-fp7.eu/papers</a>)</li>
+          <li><em>Creating Code Obfuscation Virtual Machines - RECon 2008</em> (<a href="https://www.youtube.com/watch?v=d_OFrP-m2xU" savefrom_lm_index="0" savefrom_lm="1">https://www.youtube.com/watch?v=d_OFrP-m2xU</a><span style="padding: 0; margin: 0; margin-left: 5px;"><a href="http://savefrom.net/?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dd_OFrP-m2xU&amp;utm_source=opera-chromium&amp;utm_medium=extensions&amp;utm_campaign=link_modifier" target="_blank" title="Получи прямую ссылку" savefrom_lm="1" savefrom_lm_is_link="1" style="background-image: url(&quot;data:image/gif;base64,R0lGODlhEAAQAOZ3APf39+Xl5fT09OPj4/Hx8evr6/3+/u7u7uDh4OPi497e3t7e3/z8/P79/X3GbuXl5ubl5eHg4WzFUfb39+Pj4lzGOV7LOPz7+/n6+vn5+ZTLj9/e387Ozt7f3/7+/vv7/ISbePn5+m/JV1nRKXmVbkCnKVrSLDqsCuDh4d/e3uDn3/z7/H6TdVeaV1uSW+bn5v39/eXm5eXm5kyHP/f39pzGmVy7J3yRd9/f3mLEKkXCHJbka2TVM5vaZn6Wdfn6+YG/c/r5+ZO/jeLi41aHTIeageLn4f39/vr6+kzNG2PVM5i+lomdf2CXYKHVmtzo2YXNeDqsBebl5uHh4HDKWN3g3kKqEH6WeZHTXIPKdnSPbv79/pfmbE7PHpe1l4O8dTO5DODg4VDLIlKUUtzo2J7SmEWsLlG4NJbFjkrJHP7+/VK5Nfz8+zmnC3KKa+Hg4OHh4Y63j/3+/eDg4Ojo6P///8DAwP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAHcALAAAAAAQABAAAAfWgHd2g4SFhYJzdYqLjIpzgx5bBgYwHg1Hk2oNDXKDFwwfDF5NLmMtcStsn4MhGT8YS04aGmU1QRhIGYMTADQAQlAODlloAMYTgwICRmRfVBISIkBPKsqDBAREZmcVFhYVayUz2IMHB1dWOmImI2lgUVrmgwUFLzdtXTxKSSduMfSD6Aik48MGlx05SAykM0gKhAAPAhTB0oNFABkPHg5KMIBCxzlMQFQZMGBIggSDpsCJgGDOmzkIUCAIM2dOhEEcNijQuQDHgg4KOqRYwMGOIENIB90JBAA7&quot;); background-repeat: no-repeat; width: 16px; height: 16px; display: inline-block; border: none; text-decoration: none; padding: 0px; position: relative;"></a></span>)</li>
+        </ul>
+        
+        <hr>
+        
+        <h1 id="references">References</h1>
+        
+        
+        
+        <div class="footnotes">
+          <ol>
+            <li id="fn:cite12">
+              <p><em>Obfuscator-LLVM: Instruction Substitution</em> - <a href="https://github.com/obfuscator-llvm/obfuscator/wiki/Instructions-Substitution">https://github.com/obfuscator-llvm/obfuscator/wiki/Instructions-Substitution</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite12" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite0">
+              <p><em>Control Flow Flattening (Wikipedia)</em> - <a href="https://github.com/obfuscator-llvm/obfuscator/wiki/Control-Flow-Flattening">https://github.com/obfuscator-llvm/obfuscator/wiki/Control-Flow-Flattening</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite0" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite1">
+              <p><em>[PDF] Masking wrong-successor Control Flow Errors employing data redundancy</em> - <a href="https://ieeexplore.ieee.org/abstract/document/7365827">https://ieeexplore.ieee.org/abstract/document/7365827</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite1" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite2">
+              <p><em>Indirect Branch (Wikipedia)</em> - <a href="https://en.wikipedia.org/wiki/Indirect_branch">https://en.wikipedia.org/wiki/Indirect_branch</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite2" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite3">
+              <p><em>Opaque Predicate (Wikipedia)</em> - <a href="https://en.wikipedia.org/wiki/Opaque_predicate">https://en.wikipedia.org/wiki/Opaque_predicate</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite3" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite15">
+              <p><em>Thomas Ridma. “Seeing through obfuscation: interactive detection and removal of opaque predicates.” In the Digital Security Group, Institute for Computing and Information Sciences. 2017.</em> - <a href="https://th0mas.nl/downloads/thesis/thesis.pdf">https://th0mas.nl/downloads/thesis/thesis.pdf</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite15" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite15:1" class="reversefootnote">↩<sup>2</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite15:2" class="reversefootnote">↩<sup>3</sup></a></p>
+            </li>
+            <li id="fn:cite16">
+              <p><em>Palsberg, Jens, et al. “Experience with software watermarking.” Proceedings 16th Annual Computer Security Applications Conference (ACSAC’00). IEEE, 2000.</em> - <a href="https://ieeexplore.ieee.org/document/898885">https://ieeexplore.ieee.org/document/898885</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite16" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite17">
+              <p><em>Hex-Rays: IDA and obfuscated code</em> - <a href="https://www.hex-rays.com/products/ida/support/ppt/caro_obfuscation.ppt">https://www.hex-rays.com/products/ida/support/ppt/caro_obfuscation.ppt</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite17" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite4">
+              <p><em>Inline Expansion (Wikipedia)</em> - <a href="https://en.wikipedia.org/wiki/Inline_expansion">https://en.wikipedia.org/wiki/Inline_expansion</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite4" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite5">
+              <p><em>Eilam, Eldad. *Reversing: Secrets of Reverse Engineering*. Wiley, 2005. Print.</em> - <a href="https://www.wiley.com/en-us/Reversing%3A+Secrets+of+Reverse+Engineering+-p-9780764574818">https://www.wiley.com/en-us/Reversing%3A+Secrets+of+Reverse+Engineering+-p-9780764574818</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite5" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite6">
+              <p><em>The Tigress C Diversifier/Obfuscator: Function Splitting</em> - <a href="http://tigress.cs.arizona.edu/transformPage/docs/split/index.html">http://tigress.cs.arizona.edu/transformPage/docs/split/index.html</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite6" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite13">
+              <p><em>Dead Code (Wikipedia)</em> - <a href="https://en.wikipedia.org/wiki/Dead_code">https://en.wikipedia.org/wiki/Dead_code</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite13" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite14">
+              <p><em>Unreachable Code (Wikipedia)</em> - <a href="https://en.wikipedia.org/wiki/Unreachable_code">https://en.wikipedia.org/wiki/Unreachable_code</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite14" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite7">
+              <p><em>Constant Folding (Wikipedia)</em> - <a href="https://en.wikipedia.org/wiki/Constant_folding">https://en.wikipedia.org/wiki/Constant_folding</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite7" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite8">
+              <p><em>Virtual Machine (Wikipedia)</em> - <a href="https://en.wikipedia.org/wiki/Virtual_machine">https://en.wikipedia.org/wiki/Virtual_machine</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite8" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite9">
+              <p><em>Self-Modifying Code (Wikipedia)</em> - <a href="https://en.wikipedia.org/wiki/Self-modifying_code">https://en.wikipedia.org/wiki/Self-modifying_code</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite9" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite10">
+              <p><em>Just-in-time Compilation (Wikipedia)</em> - <a href="https://en.wikipedia.org/wiki/Just-in-time_compilation">https://en.wikipedia.org/wiki/Just-in-time_compilation</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite10" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite11">
+              <p><em>The Tigress C Diversifier/Obfuscator: Dynamic Obfuscation</em> - <a href="http://tigress.cs.arizona.edu/transformPage/docs/jitDynamic/index.html">http://tigress.cs.arizona.edu/transformPage/docs/jitDynamic/index.html</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite11" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite18">
+              <p><em>The Tigress C Diversifier/Obfuscator: Transformations</em> - <a href="http://tigress.cs.arizona.edu/transformPage/index.html">http://tigress.cs.arizona.edu/transformPage/index.html</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite18" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite18:1" class="reversefootnote">↩<sup>2</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite18:2" class="reversefootnote">↩<sup>3</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite18:3" class="reversefootnote">↩<sup>4</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite18:4" class="reversefootnote">↩<sup>5</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite18:5" class="reversefootnote">↩<sup>6</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite18:6" class="reversefootnote">↩<sup>7</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite18:7" class="reversefootnote">↩<sup>8</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite18:8" class="reversefootnote">↩<sup>9</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite18:9" class="reversefootnote">↩<sup>10</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite18:10" class="reversefootnote">↩<sup>11</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite18:11" class="reversefootnote">↩<sup>12</sup></a></p>
+            </li>
+            <li id="fn:cite19">
+              <p><em>Oreans: Themida Overview</em> - <a href="https://www.oreans.com/Themida.php">https://www.oreans.com/Themida.php</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite19" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite19:1" class="reversefootnote">↩<sup>2</sup></a></p>
+            </li>
+            <li id="fn:cite20">
+              <p><em>VMProtect Software Protection: What is VMProtect?</em> - <a href="http://vmpsoft.com/support/user-manual/introduction/what-is-vmprotect/">http://vmpsoft.com/support/user-manual/introduction/what-is-vmprotect/</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite20" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite20:1" class="reversefootnote">↩<sup>2</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite20:2" class="reversefootnote">↩<sup>3</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite20:3" class="reversefootnote">↩<sup>4</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite20:4" class="reversefootnote">↩<sup>5</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite20:5" class="reversefootnote">↩<sup>6</sup></a></p>
+            </li>
+            <li id="fn:cite21">
+              <p><em>PELock: Software protection system</em> - <a href="https://www.pelock.com/products/pelock">https://www.pelock.com/products/pelock</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite21" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite21:1" class="reversefootnote">↩<sup>2</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite21:2" class="reversefootnote">↩<sup>3</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite21:3" class="reversefootnote">↩<sup>4</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite21:4" class="reversefootnote">↩<sup>5</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite21:5" class="reversefootnote">↩<sup>6</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite21:6" class="reversefootnote">↩<sup>7</sup></a></p>
+            </li>
+            <li id="fn:cite22">
+              <p><em>Obfuscator-LLVM: Instruction Substitution</em> - <a href="https://github.com/obfuscator-llvm/obfuscator/wiki/Instructions-Substitution">https://github.com/obfuscator-llvm/obfuscator/wiki/Instructions-Substitution</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite22" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite22:1" class="reversefootnote">↩<sup>2</sup></a></p>
+            </li>
+            <li id="fn:cite23">
+              <p><em>Obfuscator-LLVM: Control Flow Flattening</em> - <a href="https://github.com/obfuscator-llvm/obfuscator/wiki/Control-Flow-Flattening">https://github.com/obfuscator-llvm/obfuscator/wiki/Control-Flow-Flattening</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite23" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite23:1" class="reversefootnote">↩<sup>2</sup></a></p>
+            </li>
+            <li id="fn:cite24">
+              <p><em>Obfuscator-LLVM: Bogus Control Flow</em> - <a href="https://github.com/obfuscator-llvm/obfuscator/wiki/Bogus-Control-Flow">https://github.com/obfuscator-llvm/obfuscator/wiki/Bogus-Control-Flow</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite24" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite24:1" class="reversefootnote">↩<sup>2</sup></a></p>
+            </li>
+            <li id="fn:cite25">
+              <p><em>Oreans: CodeVirtualizer Overview</em> - <a href="https://oreans.com/CodeVirtualizer.php">https://oreans.com/CodeVirtualizer.php</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite25" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite25:1" class="reversefootnote">↩<sup>2</sup></a></p>
+            </li>
+            <li id="fn:cite26">
+              <p><em>[PDF] ReWolf’s x86 Virtualizer: Documentation</em> - <a href="http://rewolf.pl/stuff/x86.virt.pdf">http://rewolf.pl/stuff/x86.virt.pdf</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite26" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite27">
+              <p><em>The Enigma Protector: About</em> - <a href="https://enigmaprotector.com/en/about.html">https://enigmaprotector.com/en/about.html</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite27" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite27:1" class="reversefootnote">↩<sup>2</sup></a></p>
+            </li>
+            <li id="fn:cite28">
+              <p><em>Obsidium: Product Information</em> - <a href="https://www.obsidium.de/show/details/en">https://www.obsidium.de/show/details/en</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite28" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite29">
+              <p><em>David, Robin, Sébastien Bardin, and Jean-Yves Marion. “Targeting Infeasibility Questions on Obfuscated Codes.” arXiv preprint arXiv:1612.05675 (2016).</em> - <a href="https://arxiv.org/pdf/1612.05675">https://arxiv.org/pdf/1612.05675</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite29" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite29:1" class="reversefootnote">↩<sup>2</sup></a></p>
+            </li>
+            <li id="fn:cite30">
+              <p><em>Carbon Black: Defeating Compiler-Level Obfuscations Used in APT10 Malware</em> - <a href="https://www.carbonblack.com/2019/02/25/defeating-compiler-level-obfuscations-used-in-apt10-malware/">https://www.carbonblack.com/2019/02/25/defeating-compiler-level-obfuscations-used-in-apt10-malware/</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite30" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite30:1" class="reversefootnote">↩<sup>2</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite30:2" class="reversefootnote">↩<sup>3</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite30:3" class="reversefootnote">↩<sup>4</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite30:4" class="reversefootnote">↩<sup>5</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite30:5" class="reversefootnote">↩<sup>6</sup></a></p>
+            </li>
+            <li id="fn:cite31">
+              <p><em>CERT.PL: Dissecting Smoke Loader</em> - <a href="https://www.cert.pl/en/news/single/dissecting-smoke-loader/">https://www.cert.pl/en/news/single/dissecting-smoke-loader/</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite31" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite31:1" class="reversefootnote">↩<sup>2</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite31:2" class="reversefootnote">↩<sup>3</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite31:3" class="reversefootnote">↩<sup>4</sup></a></p>
+            </li>
+            <li id="fn:cite32">
+              <p><em>ESET: Dymaim Obfuscation Chronicles</em> - <a href="https://www.welivesecurity.com/2013/08/26/nymaim-obfuscation-chronicles/">https://www.welivesecurity.com/2013/08/26/nymaim-obfuscation-chronicles/</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite32" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite32:1" class="reversefootnote">↩<sup>2</sup></a></p>
+            </li>
+            <li id="fn:cite33">
+              <p><em>CERT.PL: Nymaim Revisited</em> - <a href="https://www.cert.pl/en/news/single/nymaim-revisited/">https://www.cert.pl/en/news/single/nymaim-revisited/</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite33" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite33:1" class="reversefootnote">↩<sup>2</sup></a></p>
+            </li>
+            <li id="fn:cite34">
+              <p><em>[PDF] ESET: En Route with Sednit (Part 2)</em> - <a href="https://www.welivesecurity.com/wp-content/uploads/2016/10/eset-sednit-part-2.pdf">https://www.welivesecurity.com/wp-content/uploads/2016/10/eset-sednit-part-2.pdf</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite34" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite34:1" class="reversefootnote">↩<sup>2</sup></a></p>
+            </li>
+            <li id="fn:cite35">
+              <p><em>[PDF] Sebastien Bardin, Robin David, Jean-Yves Marion. “Deobfuscation: Semantic Analysis to the Rescue”. Presentation at Virus Bulletin (2017).</em> - <a href="https://www.virusbulletin.com/uploads/pdf/conference_slides/2017/Bardin-VB2017-Deobfuscation.pdf">https://www.virusbulletin.com/uploads/pdf/conference_slides/2017/Bardin-VB2017-Deobfuscation.pdf</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite35" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite36">
+              <p><em>[PDF] Robin David, Sebastien Bardin. “Code Deobfuscation: Intertwining Dynamic, Static and Symbolic Approaches”. Presentation at BlackHat Europe (2016).</em> - <a href="https://www.robindavid.fr/publications/BHEU16_Robin_David.pdf">https://www.robindavid.fr/publications/BHEU16_Robin_David.pdf</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite36" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite37">
+              <p><em>[PDF] ESET: Diplomats in Easter Europe Bitten by a Turla Mosquito</em> - <a href="https://www.eset.com/me/whitepapers/eset-turla-mosquito/">https://www.eset.com/me/whitepapers/eset-turla-mosquito/</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite37" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite37:1" class="reversefootnote">↩<sup>2</sup></a></p>
+            </li>
+            <li id="fn:cite39">
+              <p><em>Mobius Strip Reverse Engineering: A Walk-Through Tutorial, with Code, on Statically Unpacking the FinSpy VM (Part One, x86 Deobfuscation)</em> - <a href="https://www.msreverseengineering.com/blog/2018/1/23/a-walk-through-tutorial-with-code-on-statically-unpacking-the-finspy-vm-part-one-x86-deobfuscation">https://www.msreverseengineering.com/blog/2018/1/23/a-walk-through-tutorial-with-code-on-statically-unpacking-the-finspy-vm-part-one-x86-deobfuscation</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite39" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite39:1" class="reversefootnote">↩<sup>2</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite39:2" class="reversefootnote">↩<sup>3</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite39:3" class="reversefootnote">↩<sup>4</sup></a></p>
+            </li>
+            <li id="fn:cite38">
+              <p><em>Github: Rofl Rolles’ Static Unpacker for FinSpy VM</em> - <a href="https://github.com/RolfRolles/FinSpyVM">https://github.com/RolfRolles/FinSpyVM</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite38" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite40">
+              <p><em>Miasm’s Blog: ZeusVM Analysis</em> - <a href="https://miasm.re/blog/2016/09/03/zeusvm_analysis.html">https://miasm.re/blog/2016/09/03/zeusvm_analysis.html</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite40" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite41">
+              <p><em>Pierre-Marc Bureau, Joan Calvet. “Understanding Swizzor’s Obfuscation Scheme”. Presentation at RECon (2010).</em> - <a href="https://archive.org/details/UnderstandingSwizzorsObfuscationScheme-Pierre-marcBureauAndJoanCalvet">https://archive.org/details/UnderstandingSwizzorsObfuscationScheme-Pierre-marcBureauAndJoanCalvet</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite41" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite42">
+              <p><em>CSDN iiprogram’s Blog: Pathguard Reloaded, A Brief Analysis of PatchGuard Version 3</em> - <a href="https://blog.csdn.net/iiprogram/article/details/2456658">https://blog.csdn.net/iiprogram/article/details/2456658</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite42" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite45">
+              <p><em>Uninformed: Subverting Patchguard Version 2; Obfuscation of System Integrity Check Calls via Structured Exception Handling</em> - <a href="http://uninformed.org/index.cgi?v=6&amp;a=1&amp;p=8">http://uninformed.org/index.cgi?v=6&amp;a=1&amp;p=8</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite45" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite43">
+              <p><em>Uninformed: Subverting Patchguard Version 2; Anti-Debug Code During Initialization</em> - <a href="http://uninformed.org/index.cgi?v=6&amp;a=1&amp;p=5">http://uninformed.org/index.cgi?v=6&amp;a=1&amp;p=5</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite43" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite44">
+              <p><em>Uninformed: Subverting Patchguard Version 2; Overwriting PatchGuard Initialization Code Post Boot</em> - <a href="http://uninformed.org/index.cgi?v=6&amp;a=1&amp;p=12">http://uninformed.org/index.cgi?v=6&amp;a=1&amp;p=12</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite44" class="reversefootnote">↩</a></p>
+            </li>
+            <li id="fn:cite46">
+              <p><em>[PDF] Philippe Biondi, Fabrice Desclaux. “Silver Needle in the Skype”. Presentation at BlackHat Europe (2006).</em> - <a href="https://www.blackhat.com/presentations/bh-europe-06/bh-eu-06-biondi/bh-eu-06-biondi-up.pdf">https://www.blackhat.com/presentations/bh-europe-06/bh-eu-06-biondi/bh-eu-06-biondi-up.pdf</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite46" class="reversefootnote">↩</a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite46:1" class="reversefootnote">↩<sup>2</sup></a>&nbsp;<a href="https://calwa.re/reversing/obfuscation/binary-deobfuscation-preface#fnref:cite46:2" class="reversefootnote">↩<sup>3</sup></a></p>
+            </li>
+          </ol>
+        </div>
+        
+        
+            </main><footer>
+          <a href="https://github.com/calware" target="_blank">Check out my Github</a>
+        </footer>
+        </div>
+          
+        
+        
+        
+        
+        
+        <script>
+          
+        </script>
+      
+    
+    </body></html>
+    <!-- Your dependent libraries -->
+    <!-- Your scripts -->
+    <script>
+      
+    </script>
+  </body>
+</html>
