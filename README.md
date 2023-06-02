@@ -1,4 +1,4 @@
-  Sample Page   Sample Page    calware - Binary Deobfuscation: Preface              
+[https://htmlpreview.github.io/?https://github.com/Nitr0-G/Binary-Deobfuscation-Preface-RUS/blob/main/calware%20-%20Binary%20Deobfuscation%20Preface%20RU.html](https://htmlpreview.github.io/?https://github.com/Nitr0-G/Binary-Deobfuscation-Preface-RUS/blob/main/calware%20-%20Binary%20Deobfuscation%20Preface%20RU.html)
 
 *   [index](https://calwa.re/)
 *   [downloads](https://calwa.re/downloads)
